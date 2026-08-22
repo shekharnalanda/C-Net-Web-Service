@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\AdminNotificationService;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -42,6 +43,8 @@ class TrialController extends Controller
         $data['updated_at'] = now();
 
         DB::table('trial_applications')->insert($data);
+
+        AdminNotificationService::sendTrialApplication($data);
 
         return back()->with(
             'success',

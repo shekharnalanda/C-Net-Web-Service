@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\AdminNotificationService;
 
 class EnquiryController extends Controller
 {
@@ -32,6 +33,8 @@ class EnquiryController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        AdminNotificationService::sendEnquiry($data);
 
         return back()->with('success', 'Thank you! Your enquiry has been submitted successfully.');
     }

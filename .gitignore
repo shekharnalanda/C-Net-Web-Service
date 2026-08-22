@@ -42,3 +42,4 @@ Thumbs.db
 /.vscode
 /.zed
 *.zip
+!.env.example
