@@ -50,6 +50,9 @@ function gtag(){dataLayer.push(arguments);}
 gtag("js", new Date());
 gtag("config", "G-0BXSP581FD", { anonymize_ip: true });
 </script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="512x512" href="/images/cnet-favicon.png">
+<link rel="apple-touch-icon" href="/images/cnet-favicon.png">
 <link rel="canonical" href="{{ $canonicalUrl }}">
 <meta name="robots" content="{{ $privatePage ? 'noindex, nofollow' : 'index, follow, max-image-preview:large' }}">
 
@@ -59,12 +62,12 @@ gtag("config", "G-0BXSP581FD", { anonymize_ip: true });
 <meta property="og:description" content="{{ $seoDescription }}">
 <meta property="og:url" content="{{ $canonicalUrl }}">
 <meta property="og:locale" content="en_IN">
-<meta property="og:image" content="https://web.mciedu.com/favicon.ico">
+<meta property="og:image" content="https://web.mciedu.com/images/cnet-web-og.jpg">
 
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="@yield('title', 'C-Net Web Services | Complete Website Solutions')">
 <meta name="twitter:description" content="{{ $seoDescription }}">
-<meta name="twitter:image" content="https://web.mciedu.com/favicon.ico">
+<meta name="twitter:image" content="https://web.mciedu.com/images/cnet-web-og.jpg">
 
 @if(!$privatePage && $host === 'web.mciedu.com')
 <script type="application/ld+json">{!! json_encode($businessSchema, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}</script>
