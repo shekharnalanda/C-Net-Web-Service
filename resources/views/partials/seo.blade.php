@@ -28,6 +28,8 @@
         '@type' => 'ProfessionalService',
         'name' => 'C-Net Web Services',
         'url' => 'https://web.mciedu.com',
+        'logo' => 'https://web.mciedu.com/images/cnet-favicon.png',
+        'image' => 'https://web.mciedu.com/images/cnet-web-og.jpg',
         'description' => 'Domain, hosting, website design, SEO and digital promotion services.',
         'areaServed' => 'India',
         'serviceType' => [

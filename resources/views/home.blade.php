@@ -14,7 +14,7 @@
         header{background:#fff;box-shadow:0 2px 14px #00000014;position:sticky;top:0;z-index:50}
         nav{height:76px;display:flex;align-items:center;justify-content:space-between}
         .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--dark);font-size:21px;font-weight:800}
-        .brand-mark{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:grid;place-items:center;color:#fff;font-size:27px;font-weight:900}
+        .brand-logo{width:48px;height:48px;object-fit:contain;border-radius:12px;flex:0 0 48px}
         .nav-links{display:flex;align-items:center;gap:25px}
         .nav-links a{text-decoration:none;color:var(--dark);font-weight:600}
         .nav-links a:hover{color:var(--blue)}
@@ -75,7 +75,7 @@
 <header>
     <nav class="container">
         <a href="/" class="brand">
-            <span class="brand-mark">C</span>
+            <img src="/images/cnet-favicon.png" class="brand-logo" width="48" height="48" alt="C-Net Web Services Logo">
             <span>C-Net Web Services</span>
         </a>
         <button class="menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
