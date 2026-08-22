@@ -7,7 +7,7 @@
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f3f7fb;color:#26384a;font-family:Arial,sans-serif}
 header{background:#07223d;color:#fff;padding:16px 0}.container{width:min(1200px,94%);margin:auto}
-.top{display:flex;justify-content:space-between;align-items:center;gap:20px}.top h1{font-size:22px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:20px}.admin-brand{display:flex;align-items:center;gap:11px}.admin-brand img{width:48px;height:48px;object-fit:contain;border-radius:12px;flex:0 0 48px}.top h1{font-size:22px}
 .actions{display:flex;gap:12px;align-items:center}.actions a,.actions button{color:#fff;background:#ffffff18;border:1px solid #ffffff45;padding:9px 13px;border-radius:7px;text-decoration:none;cursor:pointer}
 main{padding:30px 0}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:17px;margin-bottom:25px}
 .card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 5px 20px #0000000b}.card strong{display:block;font-size:30px;color:#0756a3}.card span{color:#64748b}
@@ -25,7 +25,7 @@ select{padding:8px;border:1px solid #bac8d8;border-radius:6px}.save{background:#
 <body>
 <header>
 <div class="container top">
-    <h1>C-Net Web Services — Admin Dashboard</h1>
+    <div class="admin-brand"><img src="/images/cnet-favicon.png" width="48" height="48" alt="C-Net Web Services Logo"><h1>C-Net Web Services — Admin Dashboard</h1></div>
     <div class="actions">
         <a href="{{ route('admin.services.index') }}">Manage Services</a><a href="{{ route('admin.plans.index') }}">Manage Plans</a><a href="{{ route('admin.trials.index') }}">Trial Applications</a><a href="{{ route('admin.password.edit') }}">Change Password</a><a href="/" target="_blank">View Website</a>
         <form method="POST" action="{{ route('admin.logout') }}">
