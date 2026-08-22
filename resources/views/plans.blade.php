@@ -8,7 +8,7 @@
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f4f8fc;color:#293c4f;font-family:Arial,sans-serif}
 header{background:#fff;padding:17px 0;box-shadow:0 2px 14px #00000010}.container{width:min(1120px,92%);margin:auto}
-nav{display:flex;justify-content:space-between;align-items:center}nav strong{color:#07223d;font-size:22px}nav a{color:#0756a3;text-decoration:none;font-weight:700}
+nav{display:flex;justify-content:space-between;align-items:center}.brand{display:flex;align-items:center;gap:10px;text-decoration:none}.brand img{width:48px;height:48px;object-fit:contain;border-radius:12px;flex:0 0 48px}nav strong{color:#07223d;font-size:22px}nav a{color:#0756a3;text-decoration:none;font-weight:700}
 .hero{text-align:center;background:linear-gradient(125deg,#061d36,#0756a3,#09a9d1);color:#fff;padding:65px 20px}
 .hero h1{font-size:clamp(38px,6vw,58px);margin:0 0 12px}.hero p{font-size:18px;color:#dcefff}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:23px;padding:45px 0 70px}
@@ -25,7 +25,7 @@ ul{padding:0;margin:23px 0;list-style:none}li{padding:8px 0;border-bottom:1px so
     @include('partials.seo')
 </head>
 <body>
-<header><nav class="container"><strong>C-Net Web Services</strong><a href="/">← Home</a></nav></header>
+<header><nav class="container"><a href="/" class="brand"><img src="/images/cnet-favicon.png" width="48" height="48" alt="C-Net Web Services Logo"><strong>C-Net Web Services</strong></a><a href="/">← Home</a></nav></header>
 <section class="hero"><h1>Website Plans & Packages</h1><p>Choose a solution and customize it according to your requirement.</p></section>
 
 <div class="container grid">
