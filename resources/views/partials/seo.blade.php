@@ -41,6 +41,7 @@
     ];
 @endphp
 
+<meta name="google-site-verification" content="bD6w1iioM8iZct5WyRBey9B2QW-UIonDWArr6JLVhsQ">
 <link rel="canonical" href="{{ $canonicalUrl }}">
 <meta name="robots" content="{{ $privatePage ? 'noindex, nofollow' : 'index, follow, max-image-preview:large' }}">
 
