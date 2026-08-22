@@ -31,5 +31,6 @@ nav{display:flex;justify-content:space-between;align-items:center}nav strong{col
     <div class="details">{{ $service->description }}</div>
     <a class="btn" href="{{ route('enquiry.create') }}">Request This Service</a>
 </div>
+    @include('partials.contact-buttons')
 </body>
 </html>

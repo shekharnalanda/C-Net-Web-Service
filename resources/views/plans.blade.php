@@ -47,5 +47,6 @@ ul{padding:0;margin:23px 0;list-style:none}li{padding:8px 0;border-bottom:1px so
     <div class="empty">Plans will be available soon.</div>
 @endforelse
 </div>
+    @include('partials.contact-buttons')
 </body>
 </html>

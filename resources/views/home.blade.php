@@ -180,5 +180,6 @@
         © {{ date('Y') }} <strong>C-Net Web Services</strong>. All Rights Reserved.
     </div>
 </footer>
+    @include('partials.contact-buttons')
 </body>
 </html>

@@ -35,5 +35,6 @@ footer{text-align:center;padding:20px;background:#03111e;color:#aebdca;font-size
 </div></section>
 
 <footer>Trial website powered by C-Net Web Services • Valid until {{ \Carbon\Carbon::parse($business->expires_at)->format('d M Y') }}</footer>
+    @include('partials.contact-buttons')
 </body>
 </html>

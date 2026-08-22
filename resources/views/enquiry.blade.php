@@ -68,5 +68,6 @@
         </form>
     </div>
 </div>
+    @include('partials.contact-buttons')
 </body>
 </html>

@@ -56,5 +56,6 @@ button{background:linear-gradient(135deg,#0756a3,#09a9d1);color:#fff;border:0;pa
 <a class="back" href="/">← Back to Home</a>
 </div>
 </div>
+    @include('partials.contact-buttons')
 </body>
 </html>
