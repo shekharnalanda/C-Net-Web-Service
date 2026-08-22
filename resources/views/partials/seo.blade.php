@@ -42,6 +42,14 @@
 @endphp
 
 <meta name="google-site-verification" content="bD6w1iioM8iZct5WyRBey9B2QW-UIonDWArr6JLVhsQ">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0BXSP581FD"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag("js", new Date());
+gtag("config", "G-0BXSP581FD", { anonymize_ip: true });
+</script>
 <link rel="canonical" href="{{ $canonicalUrl }}">
 <meta name="robots" content="{{ $privatePage ? 'noindex, nofollow' : 'index, follow, max-image-preview:large' }}">
 
