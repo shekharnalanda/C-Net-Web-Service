@@ -1,2 +1,6 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /login
+Disallow: /trial/
+Sitemap: https://web.mciedu.com/sitemap.xml
