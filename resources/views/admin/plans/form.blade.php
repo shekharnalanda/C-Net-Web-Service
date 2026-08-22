@@ -12,6 +12,7 @@ label{display:block;font-weight:700;margin:15px 0 7px}input,textarea{width:100%;
 button{background:linear-gradient(135deg,#0756a3,#09a9d1);color:#fff;border:0;padding:13px 22px;border-radius:8px;font-weight:800;margin-top:20px}
 .error{background:#feecef;color:#a31327;padding:12px;border-radius:8px}@media(max-width:600px){.row{grid-template-columns:1fr}}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <header><div class="container"><strong>C-Net Web Services</strong><a href="{{ route('admin.plans.index') }}">← Plans</a></div></header>

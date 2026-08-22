@@ -12,6 +12,7 @@ main{padding:30px 0}.notice{background:#e6f8ed;color:#176b38;padding:13px;border
 table{width:100%;border-collapse:collapse;min-width:800px;background:#fff}th,td{padding:13px;border-bottom:1px solid #e5edf4;text-align:left}th{background:#eaf2fa}
 .table{overflow:auto;border-radius:13px;box-shadow:0 5px 20px #0000000b}.badge{padding:5px 9px;border-radius:20px;font-size:12px}.yes{background:#e2f7e9;color:#16713a}.no{background:#fce7ea;color:#a91c31}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <header><div class="container top"><strong>Plans Management</strong><div><a class="btn back" href="{{ route('admin.dashboard') }}">Dashboard</a> <a class="btn add" href="{{ route('admin.plans.create') }}">+ Add Plan</a></div></div></header>

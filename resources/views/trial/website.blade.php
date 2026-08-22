@@ -14,6 +14,7 @@ section{padding:60px 0}h2{color:{{ $business->theme_color }};font-size:34px}.ser
 footer{text-align:center;padding:20px;background:#03111e;color:#aebdca;font-size:13px}
 @media(max-width:650px){.grid{grid-template-columns:1fr}}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <section class="hero"><div class="container"><h1>{{ $business->business_name }}</h1><p>{{ $business->tagline ?: $business->category }}</p></div></section>

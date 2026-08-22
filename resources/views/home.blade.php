@@ -69,6 +69,7 @@
             .contact-box{padding:26px}
         }
     </style>
+    @include('partials.seo')
 </head>
 <body>
 <header>

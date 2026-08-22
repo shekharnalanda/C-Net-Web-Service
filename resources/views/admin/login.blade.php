@@ -16,6 +16,7 @@ button{width:100%;padding:13px;margin-top:20px;border:0;border-radius:9px;backgr
 .error{background:#feecef;color:#a31327;padding:12px;border-radius:8px;margin-bottom:15px}
 .back{display:block;text-align:center;margin-top:18px;color:#0756a3;text-decoration:none}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <div class="box">

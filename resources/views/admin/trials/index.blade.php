@@ -19,6 +19,7 @@ textarea{min-height:62px}.save{background:#0756a3;color:#fff;border:0;font-weigh
 @media(max-width:850px){.details{grid-template-columns:1fr 1fr}.actions{grid-template-columns:1fr}}
 @media(max-width:520px){.details{grid-template-columns:1fr}.heading{flex-direction:column}}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <header><div class="container top"><strong>Trial Website Applications</strong><a href="{{ route('admin.dashboard') }}">Dashboard</a></div></header>

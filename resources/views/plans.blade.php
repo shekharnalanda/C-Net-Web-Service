@@ -22,6 +22,7 @@ ul{padding:0;margin:23px 0;list-style:none}li{padding:8px 0;border-bottom:1px so
 @media(max-width:850px){.grid{grid-template-columns:1fr 1fr}.card.featured{transform:none}}
 @media(max-width:560px){.grid{grid-template-columns:1fr}}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <header><nav class="container"><strong>C-Net Web Services</strong><a href="/">← Home</a></nav></header>

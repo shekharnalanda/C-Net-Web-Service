@@ -18,6 +18,7 @@ th,td{padding:14px;border-bottom:1px solid #e6edf4}.icon{font-size:25px}
 .edit{background:#0756a3;color:#fff}.delete{background:#c52a3c;color:#fff}
 .inline{display:inline}.empty{text-align:center;padding:35px;color:#64748b}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <header>

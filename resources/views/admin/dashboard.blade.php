@@ -20,6 +20,7 @@ select{padding:8px;border:1px solid #bac8d8;border-radius:6px}.save{background:#
 .empty{text-align:center;padding:35px;color:#64748b}
 @media(max-width:750px){.cards{grid-template-columns:1fr 1fr}.top{align-items:flex-start;flex-direction:column}}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <header>

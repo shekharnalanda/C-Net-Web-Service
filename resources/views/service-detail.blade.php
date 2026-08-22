@@ -15,6 +15,7 @@ nav{display:flex;justify-content:space-between;align-items:center}nav strong{col
 .content h2{color:#07223d}.details{white-space:pre-line;font-size:17px;line-height:1.8}
 .btn{display:inline-block;margin-top:26px;padding:13px 22px;background:linear-gradient(135deg,#0756a3,#09a9d1);color:#fff;text-decoration:none;border-radius:8px;font-weight:800}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <header><nav class="container"><strong>C-Net Web Services</strong><a href="/">← Home</a></nav></header>

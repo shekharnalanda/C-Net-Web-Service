@@ -16,6 +16,7 @@ textarea{min-height:130px;resize:vertical}.row{display:grid;grid-template-column
 button{background:linear-gradient(135deg,#0756a3,#09a9d1);color:#fff;border:0;padding:13px 22px;border-radius:8px;font-weight:800;margin-top:21px;cursor:pointer}
 @media(max-width:600px){.row{grid-template-columns:1fr}}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <header>

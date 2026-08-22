@@ -15,6 +15,7 @@ button{background:linear-gradient(135deg,#0756a3,#09a9d1);color:#fff;border:0;pa
 .back{display:inline-block;margin:20px 0;color:#0756a3;text-decoration:none;font-weight:700}
 @media(max-width:650px){.row{grid-template-columns:1fr}}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <header><h1>Get Your Free Trial Website</h1><p>Submit your business details for a 7–10 day one-page website trial.</p></header>

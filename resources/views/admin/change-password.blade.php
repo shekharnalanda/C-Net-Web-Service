@@ -18,6 +18,7 @@ button{margin-top:22px;border:0;border-radius:8px;padding:13px 22px;background:l
 .error{background:#feecef;color:#a31327;padding:13px;border-radius:8px;margin-bottom:16px}
 .help{font-size:13px;color:#64748b;margin-top:7px}
 </style>
+    @include('partials.seo')
 </head>
 <body>
 <header>

@@ -18,6 +18,7 @@
         .back{color:#0756a3;margin-left:8px}.success{background:#e8f8ee;color:#176b38;padding:14px;border-radius:8px;margin-bottom:18px}
         .error{color:#bb1e2d;font-size:14px;margin-top:5px}
     </style>
+    @include('partials.seo')
 </head>
 <body>
 <div class="header">
