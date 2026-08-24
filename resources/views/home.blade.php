@@ -179,6 +179,9 @@
     <div class="container">
         © {{ date('Y') }} <strong>C-Net Web Services</strong>. All Rights Reserved.
     </div>
+    <div class="homepage-admin-login" style="text-align:center;margin-top:14px">
+        <a href="{{ route('admin.login') }}" style="display:inline-block;color:#cfe7ff;text-decoration:none;border:1px solid #ffffff55;padding:8px 15px;border-radius:7px;font-size:14px">Admin Login</a>
+    </div>
 </footer>
     @include('partials.contact-buttons')
 </body>
