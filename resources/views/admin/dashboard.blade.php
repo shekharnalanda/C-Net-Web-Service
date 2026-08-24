@@ -27,7 +27,7 @@ select{padding:8px;border:1px solid #bac8d8;border-radius:6px}.save{background:#
 <div class="container top">
     <div class="admin-brand"><img src="/images/cnet-favicon.png" width="48" height="48" alt="C-Net Web Services Logo"><h1>C-Net Web Services — Admin Dashboard</h1></div>
     <div class="actions">
-        <a href="{{ route('admin.services.index') }}">Manage Services</a><a href="{{ route('admin.plans.index') }}">Manage Plans</a><a href="{{ route('admin.trials.index') }}">Trial Applications</a><a href="{{ route('admin.password.edit') }}">Change Password</a><a href="/" target="_blank">View Website</a>
+        <a href="{{ route('admin.projects.index') }}">Live Website Projects</a><a href="{{ route('admin.services.index') }}">Manage Services</a><a href="{{ route('admin.plans.index') }}">Manage Plans</a><a href="{{ route('admin.trials.index') }}">Trial Applications</a><a href="{{ route('admin.password.edit') }}">Change Password</a><a href="/" target="_blank">View Website</a>
         <form method="POST" action="{{ route('admin.logout') }}">
             @csrf
             <button type="submit">Logout</button>

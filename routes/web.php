@@ -56,3 +56,20 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::delete('/enquiries/{id}', [AdminController::class, 'destroy'])->name('admin.enquiries.delete');
     Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
 });
+
+Route::middleware('auth')->prefix('admin')->group(function () {
+    Route::get('/projects', [\App\Http\Controllers\WebsiteProjectController::class, 'index'])
+        ->name('admin.projects.index');
+
+    Route::get('/trials/{trialId}/convert', [\App\Http\Controllers\WebsiteProjectController::class, 'create'])
+        ->name('admin.projects.convert');
+
+    Route::post('/trials/{trialId}/convert', [\App\Http\Controllers\WebsiteProjectController::class, 'store'])
+        ->name('admin.projects.store');
+
+    Route::get('/projects/{id}', [\App\Http\Controllers\WebsiteProjectController::class, 'show'])
+        ->name('admin.projects.show');
+
+    Route::patch('/projects/{id}', [\App\Http\Controllers\WebsiteProjectController::class, 'update'])
+        ->name('admin.projects.update');
+});
