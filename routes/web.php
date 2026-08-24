@@ -17,7 +17,7 @@ Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('servic
 Route::get('/plans', [PlanController::class, 'publicIndex'])->name('plans');
 
 Route::get('/trial/apply', [TrialController::class, 'create'])->name('trial.apply');
-Route::post('/trial/apply', [TrialController::class, 'store'])->middleware('throttle:5,1')->name('trial.store');
+Route::post('/trial/apply', [TrialController::class, 'store'])->middleware('throttle:3,10')->name('trial.store');
 Route::get('/trial/{slug}', [TrialController::class, 'show'])->name('trial.show');
 
 Route::middleware('guest')->group(function () {
@@ -48,6 +48,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::patch('/trials/{id}/status', [TrialController::class, 'updateStatus'])->name('admin.trials.status');
     Route::post('/trials/{id}/extend', [TrialController::class, 'extend'])->name('admin.trials.extend');
     Route::post('/trials/{id}/upgrade', [TrialController::class, 'upgrade'])->name('admin.trials.upgrade');
+    Route::post('/trials/{id}/suspend', [TrialController::class, 'suspend'])->name('admin.trials.suspend');
+    Route::post('/trials/{id}/restore', [TrialController::class, 'restore'])->name('admin.trials.restore');
+    Route::delete('/trials/{id}', [TrialController::class, 'destroy'])->name('admin.trials.destroy');
 
     Route::patch('/enquiries/{id}/status', [AdminController::class, 'updateStatus'])->name('admin.enquiries.status');
     Route::delete('/enquiries/{id}', [AdminController::class, 'destroy'])->name('admin.enquiries.delete');
