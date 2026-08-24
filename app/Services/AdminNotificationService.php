@@ -35,7 +35,7 @@ class AdminNotificationService
             'Phone: '.$data['phone'],
             'Email: '.($data['email'] ?? 'Not provided'),
             'Category: '.$data['category'],
-            'Requested URL: https://'.$data['desired_slug'].'.web.mciedu.com',
+            'Requested URL: https://'.$data['desired_slug'].'.mciedu.com',
             '',
             'Admin: https://web.mciedu.com/admin/trials',
         ]);

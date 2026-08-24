@@ -7,7 +7,15 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TrialController;
 use Illuminate\Support\Facades\Route;
 
-Route::domain('{slug}.web.mciedu.com')->get('/', [TrialController::class, 'show'])->name('trial.subdomain');
+Route::domain('web.mciedu.com')->get('/', function () {
+    return view('home');
+});
+
+Route::domain('{slug}.mciedu.com')->get('/', [TrialController::class, 'show'])
+    ->name('trial.subdomain');
+
+Route::domain('{slug}.web.mciedu.com')->get('/', [TrialController::class, 'show'])
+    ->name('trial.subdomain.legacy');
 Route::view('/', 'home')->name('home');
 Route::redirect('/login', '/admin/login')->name('login');
 

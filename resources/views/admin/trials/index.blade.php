@@ -48,7 +48,7 @@ textarea{min-height:62px}.save{background:#0756a3;color:#fff;border:0;font-weigh
 
     <div class="details">
         <div><strong>Authority Contact</strong>{{ $application->phone }}<br>{{ $application->email }}</div>
-        <div><strong>Subdomain</strong>{{ $application->desired_slug }}.web.mciedu.com</div>
+        <div><strong>Subdomain</strong>{{ $application->desired_slug }}.mciedu.com</div>
         <div><strong>Template</strong>{{ ucfirst($application->template_key ?: 'modern') }}</div>
         <div><strong>Valid Until</strong>{{ $application->expires_at ?: 'Not started' }}</div>
     </div>

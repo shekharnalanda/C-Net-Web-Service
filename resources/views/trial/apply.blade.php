@@ -135,7 +135,7 @@ button{width:100%;background:linear-gradient(135deg,var(--blue),var(--cyan));col
                        pattern="[a-z0-9][a-z0-9-]{2,62}"
                        value="{{ old('desired_slug') }}"
                        placeholder="nalanda-coaching">
-                <span class="suffix">.web.mciedu.com</span>
+                <span class="suffix">.mciedu.com</span>
             </div>
             <small class="help">Only lowercase letters, numbers and hyphens. Minimum 3 characters.</small>
 

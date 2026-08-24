@@ -75,6 +75,26 @@ class TrialController extends Controller
             'email' => ['required', 'email', 'max:150'],
             'desired_slug' => [
                 'required',
+                Rule::notIn([
+                    'www',
+                    'web',
+                    'mail',
+                    'cpanel',
+                    'webmail',
+                    'webdisk',
+                    'ftp',
+                    'autodiscover',
+                    'cpcontacts',
+                    'cpcalendars',
+                    'cnet',
+                    'library',
+                    'cnetlibrary',
+                    'cnetcomputer',
+                    'pathshala',
+                    'admin',
+                    'api',
+                    'support',
+                ]),
                 'regex:/^[a-z0-9][a-z0-9-]{2,62}$/',
                 Rule::notIn(self::RESERVED_SLUGS),
                 Rule::unique('trial_applications', 'desired_slug'),
@@ -104,7 +124,7 @@ class TrialController extends Controller
         ]);
 
         $now = now();
-        $trialUrl = 'https://'.$data['desired_slug'].'.web.mciedu.com';
+        $trialUrl = 'https://'.$data['desired_slug'].'.mciedu.com';
 
         $data['website_name'] =
             $data['website_name'] ?: $data['business_name'];
@@ -196,7 +216,7 @@ class TrialController extends Controller
                 : now()->addDays(7);
 
             $update['trial_url'] =
-                'https://'.$application->desired_slug.'.web.mciedu.com';
+                'https://'.$application->desired_slug.'.mciedu.com';
 
             $update['suspended_at'] = null;
             $update['expired_at'] = null;
@@ -249,7 +269,7 @@ class TrialController extends Controller
                 'expired_at' => null,
                 'expires_at' => now()->addDays(7),
                 'trial_url' =>
-                    'https://'.$application->desired_slug.'.web.mciedu.com',
+                    'https://'.$application->desired_slug.'.mciedu.com',
                 'updated_at' => now(),
             ]);
 
@@ -280,7 +300,7 @@ class TrialController extends Controller
                 'expired_at' => null,
                 'suspended_at' => null,
                 'trial_url' =>
-                    'https://'.$application->desired_slug.'.web.mciedu.com',
+                    'https://'.$application->desired_slug.'.mciedu.com',
                 'updated_at' => now(),
             ]);
 
