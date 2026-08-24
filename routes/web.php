@@ -81,3 +81,30 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::patch('/projects/{id}', [\App\Http\Controllers\WebsiteProjectController::class, 'update'])
         ->name('admin.projects.update');
 });
+
+Route::middleware('auth')->prefix('admin')->group(function () {
+    Route::get(
+        '/trial-websites/{id}/edit',
+        [\App\Http\Controllers\TrialWebsiteAdminController::class, 'edit']
+    )->name('admin.trial-websites.edit');
+
+    Route::patch(
+        '/trial-websites/{id}',
+        [\App\Http\Controllers\TrialWebsiteAdminController::class, 'update']
+    )->name('admin.trial-websites.update');
+
+    Route::patch(
+        '/trial-websites/{id}/suspend',
+        [\App\Http\Controllers\TrialWebsiteAdminController::class, 'suspend']
+    )->name('admin.trial-websites.suspend');
+
+    Route::patch(
+        '/trial-websites/{id}/restore',
+        [\App\Http\Controllers\TrialWebsiteAdminController::class, 'restore']
+    )->name('admin.trial-websites.restore');
+
+    Route::delete(
+        '/trial-websites/{id}',
+        [\App\Http\Controllers\TrialWebsiteAdminController::class, 'destroy']
+    )->name('admin.trial-websites.destroy');
+});

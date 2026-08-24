@@ -125,5 +125,6 @@ textarea{min-height:62px}.save{background:#0756a3;color:#fff;border:0;font-weigh
 <div class="application">No trial websites have been created yet.</div>
 @endforelse
 </main>
+    @include('admin.trials.quick-management')
 </body>
 </html>
