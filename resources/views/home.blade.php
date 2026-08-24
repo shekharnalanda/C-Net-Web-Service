@@ -82,7 +82,7 @@
         <div class="nav-links">
             <a href="#home">Home</a>
             <a href="#services">Services</a>
-            <a href="#trial">Free Trial</a><a href="/plans">Plans</a>
+            <a href="{{ route('trial.apply') }}">Free Trial</a><a href="/plans">Plans</a>
             <a href="#process">Process</a>
             <a href="#contact" class="btn">Contact Us</a>
         </div>
@@ -98,7 +98,7 @@
             <p>Domain, hosting, professional website design, SEO and digital promotion—everything your business needs at one trusted place.</p>
             <div class="hero-actions">
                 <a href="#contact" class="btn btn-white">Start Your Website</a>
-                <a href="#trial" class="btn btn-outline">Try One-Page Website</a>
+                <a href="{{ route('trial.apply') }}" class="btn btn-outline">Try One-Page Website</a>
             </div>
         </div>
         <div class="hero-card">
@@ -138,7 +138,7 @@
             <h2>Launch Your Trial Website</h2>
             <p>Create a professional one-page website on our subdomain and use it free for 7–10 days. Upgrade to a complete plan when you are satisfied.</p>
         </div>
-        <a href="/trial/apply" class="btn btn-white">Request Free Trial</a>
+        <a href="{{ route('trial.apply') }}" class="btn btn-white">Create Free Website</a>
     </div>
 </section>
 
