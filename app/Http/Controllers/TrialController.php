@@ -68,7 +68,7 @@ class TrialController extends Controller
         ]);
 
         $data = $request->validate([
-            'website_name' => ['nullable', 'string', 'max:150'],
+            'website_name' => ['required', 'string', 'max:150'],
             'business_name' => ['required', 'string', 'max:150'],
             'owner_name' => ['required', 'string', 'max:120'],
             'phone' => ['required', 'string', 'min:8', 'max:20'],
@@ -81,7 +81,7 @@ class TrialController extends Controller
             ],
             'category' => ['required', 'string', 'max:120'],
             'template_key' => [
-                'nullable',
+                'required',
                 Rule::in(self::TEMPLATES),
             ],
             'tagline' => ['nullable', 'string', 'max:250'],
@@ -93,7 +93,7 @@ class TrialController extends Controller
                 'required',
                 'regex:/^#[0-9A-Fa-f]{6}$/',
             ],
-            'terms_accepted' => ['nullable', 'accepted'],
+            'terms_accepted' => ['required', 'accepted'],
         ], [
             'desired_slug.regex' =>
                 'Website name must contain only lowercase letters, numbers and hyphens.',
@@ -344,19 +344,42 @@ class TrialController extends Controller
     {
         $business = DB::table('trial_applications')
             ->where('desired_slug', $slug)
-            ->where(function ($query) {
-                $query
-                    ->where(function ($active) {
-                        $active
-                            ->where('status', 'approved')
-                            ->where('expires_at', '>=', now());
-                    })
-                    ->orWhere('status', 'upgraded');
-            })
             ->first();
 
         abort_unless($business, 404);
 
-        return view('trial.website', compact('business'));
+        if (
+            $business->status === 'upgraded'
+            || (
+                $business->status === 'approved'
+                && $business->expires_at
+                && Carbon::parse($business->expires_at)->isFuture()
+            )
+        ) {
+            return view('trial.website', compact('business'));
+        }
+
+        if (
+            $business->status === 'approved'
+            && $business->expires_at
+            && Carbon::parse($business->expires_at)->isPast()
+        ) {
+            DB::table('trial_applications')
+                ->where('id', $business->id)
+                ->update([
+                    'status' => 'expired',
+                    'expired_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+            $business->status = 'expired';
+        }
+
+        if (in_array($business->status, ['expired', 'suspended'], true)) {
+            return response()
+                ->view('trial.expired', compact('business'), 410);
+        }
+
+        abort(404);
     }
 }
