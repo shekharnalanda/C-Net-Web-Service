@@ -234,9 +234,9 @@ class _ClientProjectsPageState extends State<_ClientProjectsPage> {
             return ClientLoginScreen(api: widget.api, onAuthenticated: reload);
           }
           if (snapshot.connectionState != ConnectionState.done) {
-            return const Scaffold(
-              appBar: AppBar(title: Text('My Websites')),
-              body: Center(child: CircularProgressIndicator()),
+            return Scaffold(
+              appBar: AppBar(title: const Text('My Websites')),
+              body: const Center(child: CircularProgressIndicator()),
             );
           }
           if (snapshot.hasError || !snapshot.hasData) {
