@@ -93,6 +93,8 @@ try {
         $Alias | & $Gh secret set ANDROID_KEY_ALIAS --repo $Repo
         $Password | & $Gh secret set ANDROID_KEY_PASSWORD --repo $Repo
         Write-Host "GITHUB_SIGNING_SECRETS=CONFIGURED" -ForegroundColor Green
+        & $Gh workflow run mobile-android.yml --repo $Repo
+        Write-Host "SIGNED_ANDROID_BUILD=TRIGGERED" -ForegroundColor Green
     }
     else {
         $SecretFile = Join-Path $ReleaseDirectory "github-signing-secrets.txt"
