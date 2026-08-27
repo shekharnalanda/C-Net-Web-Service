@@ -26,6 +26,21 @@ Route::get('/plans', [PlanController::class, 'publicIndex'])->name('plans');
 
 Route::get('/trial/apply', [TrialController::class, 'create'])->name('trial.apply');
 Route::post('/trial/apply', [\App\Http\Controllers\TrialEmailOtpController::class, 'send'])->middleware('throttle:3,10')->name('trial.store');
+
+Route::get(
+    '/trial/verify-email',
+    [\App\Http\Controllers\TrialEmailOtpController::class, 'form']
+)->name('trial.email.verify.form');
+
+Route::post(
+    '/trial/verify-email',
+    [\App\Http\Controllers\TrialEmailOtpController::class, 'verify']
+)->middleware('throttle:6,10')->name('trial.email.verify');
+
+Route::post(
+    '/trial/resend-email-otp',
+    [\App\Http\Controllers\TrialEmailOtpController::class, 'resend']
+)->middleware('throttle:3,10')->name('trial.email.resend');
 Route::get('/trial/{slug}', [TrialController::class, 'show'])->name('trial.show');
 
 Route::middleware('guest')->group(function () {
@@ -109,18 +124,3 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     )->name('admin.trial-websites.destroy');
 });
 
-
-Route::get(
-    '/trial/verify-email',
-    [\App\Http\Controllers\TrialEmailOtpController::class, 'form']
-)->name('trial.email.verify.form');
-
-Route::post(
-    '/trial/verify-email',
-    [\App\Http\Controllers\TrialEmailOtpController::class, 'verify']
-)->middleware('throttle:6,10')->name('trial.email.verify');
-
-Route::post(
-    '/trial/resend-email-otp',
-    [\App\Http\Controllers\TrialEmailOtpController::class, 'resend']
-)->middleware('throttle:3,10')->name('trial.email.resend');
