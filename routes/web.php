@@ -41,6 +41,11 @@ Route::post(
     '/trial/resend-email-otp',
     [\App\Http\Controllers\TrialEmailOtpController::class, 'resend']
 )->middleware('throttle:3,10')->name('trial.email.resend');
+
+Route::get(
+    '/trial/success',
+    [TrialController::class, 'success']
+)->name('trial.success');
 Route::get('/trial/{slug}', [TrialController::class, 'show'])->name('trial.show');
 
 Route::middleware('guest')->group(function () {
