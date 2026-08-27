@@ -16,7 +16,7 @@ if (-not (Get-Command magick -ErrorAction SilentlyContinue)) {
     throw "ImageMagick is required. Install it once with: winget install ImageMagick.ImageMagick"
 }
 magick "..\public\images\cnet-web-logo.jpeg" -resize "1024x1024^" -gravity center -extent 1024x1024 "$BrandingDirectory\app_icon.png"
-Copy-Item "..\public\images\cnet-web-logo.jpeg" "$BrandingDirectory\splash_logo.jpeg" -Force
+magick "..\public\images\cnet-web-logo.jpeg" "$BrandingDirectory\splash_logo.png"
 magick "$BrandingDirectory\app_icon.png" -resize 48x48 "android\app\src\main\res\mipmap-mdpi\ic_launcher.png"
 magick "$BrandingDirectory\app_icon.png" -resize 72x72 "android\app\src\main\res\mipmap-hdpi\ic_launcher.png"
 magick "$BrandingDirectory\app_icon.png" -resize 96x96 "android\app\src\main\res\mipmap-xhdpi\ic_launcher.png"
