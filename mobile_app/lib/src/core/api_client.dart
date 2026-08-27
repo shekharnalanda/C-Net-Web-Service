@@ -40,7 +40,9 @@ class ApiClient {
 
   Future<Map<String, dynamic>> clientDashboard() async {
     final token = await tokenStore.readToken();
-    if (token == null) throw ApiException('LOGIN_REQUIRED');
+    if (token == null) {
+      throw ApiException('LOGIN_REQUIRED');
+    }
     return _get('/client/me', token: token);
   }
 
@@ -51,14 +53,18 @@ class ApiClient {
       'device_name': 'C-Net Web Services Admin App',
     });
     final token = payload['token']?.toString();
-    if (token == null || token.isEmpty) throw ApiException('Admin token was not received.');
+    if (token == null || token.isEmpty) {
+      throw ApiException('Admin token was not received.');
+    }
     await tokenStore.saveAdminToken(token);
     return payload;
   }
 
   Future<Map<String, dynamic>> adminDashboard() async {
     final token = await tokenStore.readAdminToken();
-    if (token == null) throw ApiException('ADMIN_LOGIN_REQUIRED');
+    if (token == null) {
+      throw ApiException('ADMIN_LOGIN_REQUIRED');
+    }
     return _get('/admin/dashboard', token: token);
   }
 
@@ -124,7 +130,9 @@ class ApiClient {
       final errors = payload['errors'];
       if (errors is Map && errors.isNotEmpty) {
         final first = errors.values.first;
-        if (first is List && first.isNotEmpty) throw ApiException(first.first.toString());
+        if (first is List && first.isNotEmpty) {
+          throw ApiException(first.first.toString());
+        }
       }
       throw ApiException(payload['message']?.toString() ?? 'Request failed.');
     }
