@@ -41,11 +41,14 @@ elseif ($GhCommand) {
     $Gh = $GhCommand.Source
 }
 
-if (Test-Path $Keystore) {
-    throw "Signing key already exists at $Keystore. It was not overwritten."
+$ExistingKeystore = Test-Path $Keystore
+if ($ExistingKeystore) {
+    Write-Host "Existing C-Net Web Services signing key found; setup will safely resume." -ForegroundColor Cyan
+    $SecurePassword = Read-Host "Enter the existing signing password" -AsSecureString
 }
-
-$SecurePassword = Read-Host "Create a strong signing password (minimum 12 characters)" -AsSecureString
+else {
+    $SecurePassword = Read-Host "Create a strong signing password (minimum 12 characters)" -AsSecureString
+}
 $Pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecurePassword)
 $Password = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($Pointer)
 
@@ -54,22 +57,36 @@ try {
         throw "Signing password must contain at least 12 characters."
     }
 
-    & $Keytool -genkeypair -v `
-        -keystore $Keystore `
-        -alias $Alias `
-        -keyalg RSA `
-        -keysize 4096 `
-        -validity 10000 `
-        -storepass $Password `
-        -keypass $Password `
-        -dname "CN=C-Net Web Services, OU=MCI Educational Group, O=C-Net Web Services, L=Bihar Sharif, ST=Bihar, C=IN"
+    if (-not $ExistingKeystore) {
+        & $Keytool -genkeypair -v `
+            -keystore $Keystore `
+            -alias $Alias `
+            -keyalg RSA `
+            -keysize 4096 `
+            -validity 10000 `
+            -storepass $Password `
+            -keypass $Password `
+            -dname "CN=C-Net Web Services, OU=MCI Educational Group, O=C-Net Web Services, L=Bihar Sharif, ST=Bihar, C=IN"
+    }
+
+    & $Keytool -list -keystore $Keystore -alias $Alias -storepass $Password | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        throw "The existing signing password is incorrect."
+    }
 
     $Base64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($Keystore))
 
     if ($Gh) {
+        $PreviousErrorActionPreference = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
         & $Gh auth status 2>$null
-        if ($LASTEXITCODE -ne 0) {
+        $GitHubAuthStatus = $LASTEXITCODE
+        $ErrorActionPreference = $PreviousErrorActionPreference
+        if ($GitHubAuthStatus -ne 0) {
             & $Gh auth login --hostname github.com --git-protocol https --web
+            if ($LASTEXITCODE -ne 0) {
+                throw "GitHub login was not completed."
+            }
         }
         $Base64 | & $Gh secret set ANDROID_KEYSTORE_BASE64 --repo $Repo
         $Password | & $Gh secret set ANDROID_KEYSTORE_PASSWORD --repo $Repo
