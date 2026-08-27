@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TrialController;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,10 @@ Route::domain('{slug}.web.mciedu.com')->get('/', [TrialController::class, 'show'
     ->name('trial.subdomain.legacy');
 Route::view('/', 'home')->name('home');
 Route::redirect('/login', '/admin/login')->name('login');
+Route::get('/privacy-policy', [PrivacyController::class, 'policy'])->name('privacy-policy');
+Route::get('/account-deletion', [PrivacyController::class, 'deletionForm'])->name('account-deletion.form');
+Route::post('/account-deletion', [PrivacyController::class, 'requestDeletion'])
+    ->middleware('throttle:3,60')->name('account-deletion.request');
 
 Route::get('/enquiry', [EnquiryController::class, 'create'])->name('enquiry.create');
 Route::post('/enquiry', [EnquiryController::class, 'store'])->middleware('throttle:10,1')->name('enquiry.store');
@@ -128,4 +133,3 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         [\App\Http\Controllers\TrialWebsiteAdminController::class, 'destroy']
     )->name('admin.trial-websites.destroy');
 });
-
