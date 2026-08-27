@@ -64,10 +64,11 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Generate branded icon and splash
-        run: |
-          dart run flutter_launcher_icons
-          dart run flutter_native_splash:create
+      - name: Generate branded launcher icon
+        run: dart run flutter_launcher_icons
+
+      - name: Generate branded splash screen
+        run: dart run flutter_native_splash:create
 
       - name: Normalize Dart formatting
         run: dart format lib test
