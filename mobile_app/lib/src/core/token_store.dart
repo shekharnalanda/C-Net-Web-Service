@@ -5,6 +5,7 @@ class TokenStore {
   static const _storage = FlutterSecureStorage();
   static const _tokenKey = 'cnet_web_services_client_token';
   static const _emailKey = 'cnet_web_services_client_email';
+  static const _adminTokenKey = 'cnet_web_services_admin_token';
 
   Future<String?> readToken() => _storage.read(key: _tokenKey);
   Future<String?> readEmail() => _storage.read(key: _emailKey);
@@ -13,6 +14,11 @@ class TokenStore {
     await _storage.write(key: _tokenKey, value: token);
     await _storage.write(key: _emailKey, value: email);
   }
+
+  Future<String?> readAdminToken() => _storage.read(key: _adminTokenKey);
+  Future<void> saveAdminToken(String token) =>
+      _storage.write(key: _adminTokenKey, value: token);
+  Future<void> clearAdminToken() => _storage.delete(key: _adminTokenKey);
 
   Future<void> clear() async {
     await _storage.delete(key: _tokenKey);
