@@ -1,7 +1,7 @@
 name: cnet_web_services
 description: C-Net Web Services mobile app for Android and iOS.
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.1.0+2
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -17,6 +17,27 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.8
 
 flutter:
   uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/branding/app_icon.png
+  adaptive_icon_background: "#061D36"
+  adaptive_icon_foreground: assets/branding/app_icon.png
+  min_sdk_android: 23
+
+flutter_native_splash:
+  color: "#061D36"
+  image: assets/branding/splash_logo.jpeg
+  color_dark: "#061D36"
+  image_dark: assets/branding/splash_logo.jpeg
+  android_12:
+    color: "#061D36"
+    image: assets/branding/app_icon.png
+    color_dark: "#061D36"
+    image_dark: assets/branding/app_icon.png
