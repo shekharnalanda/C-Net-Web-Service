@@ -356,6 +356,8 @@ class _ProfilePage extends StatelessWidget {
           ListTile(leading: const Icon(Icons.email_outlined), title: const Text('Email'), subtitle: Text(brand['email'].toString()), onTap: () => onOpen('mailto:${brand['email']}')),
           ListTile(leading: const Icon(Icons.phone_outlined), title: const Text('Call'), subtitle: Text(brand['phone'].toString()), onTap: () => onOpen('tel:${brand['phone']}')),
           ListTile(leading: const Icon(Icons.chat_outlined), title: const Text('WhatsApp Support'), onTap: () => onOpen('https://wa.me/91${brand['phone']}')),
+          ListTile(leading: const Icon(Icons.privacy_tip_outlined), title: const Text('Privacy Policy'), subtitle: const Text('How your information is protected'), onTap: () => onOpen('https://web.mciedu.com/privacy-policy')),
+          ListTile(leading: const Icon(Icons.delete_forever_outlined), title: const Text('Account & Data Deletion'), subtitle: const Text('Request deletion of your client data'), onTap: () => onOpen('https://web.mciedu.com/account-deletion')),
         ])),
         const SizedBox(height: 18),
         Card(child: ListTile(
