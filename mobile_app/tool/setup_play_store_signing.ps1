@@ -7,6 +7,40 @@ $Keystore = Join-Path $ReleaseDirectory "cnet-web-services-upload-key.jks"
 
 New-Item -ItemType Directory -Force -Path $ReleaseDirectory | Out-Null
 
+$KeytoolCommand = Get-Command keytool -ErrorAction SilentlyContinue
+if (-not $KeytoolCommand) {
+    $KeytoolCandidate = Get-ChildItem @(
+        "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe",
+        "C:\Program Files\Microsoft\jdk-*\bin\keytool.exe",
+        "C:\Program Files\Eclipse Adoptium\jdk-*\bin\keytool.exe"
+    ) -ErrorAction SilentlyContinue | Select-Object -First 1
+
+    if (-not $KeytoolCandidate -and (Get-Command winget -ErrorAction SilentlyContinue)) {
+        winget install --id Microsoft.OpenJDK.17 --exact --accept-package-agreements --accept-source-agreements
+        $KeytoolCandidate = Get-ChildItem "C:\Program Files\Microsoft\jdk-*\bin\keytool.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+    }
+
+    if (-not $KeytoolCandidate) {
+        throw "Java keytool was not found. Install JDK 17 and run this setup again."
+    }
+    $Keytool = $KeytoolCandidate.FullName
+}
+else {
+    $Keytool = $KeytoolCommand.Source
+}
+
+$GhCommand = Get-Command gh -ErrorAction SilentlyContinue
+if (-not $GhCommand -and (Get-Command winget -ErrorAction SilentlyContinue)) {
+    winget install --id GitHub.cli --exact --accept-package-agreements --accept-source-agreements
+    $GhCandidate = Get-Item "C:\Program Files\GitHub CLI\gh.exe" -ErrorAction SilentlyContinue
+    if ($GhCandidate) {
+        $Gh = $GhCandidate.FullName
+    }
+}
+elseif ($GhCommand) {
+    $Gh = $GhCommand.Source
+}
+
 if (Test-Path $Keystore) {
     throw "Signing key already exists at $Keystore. It was not overwritten."
 }
@@ -20,7 +54,7 @@ try {
         throw "Signing password must contain at least 12 characters."
     }
 
-    keytool -genkeypair -v `
+    & $Keytool -genkeypair -v `
         -keystore $Keystore `
         -alias $Alias `
         -keyalg RSA `
@@ -32,11 +66,15 @@ try {
 
     $Base64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($Keystore))
 
-    if (Get-Command gh -ErrorAction SilentlyContinue) {
-        $Base64 | gh secret set ANDROID_KEYSTORE_BASE64 --repo $Repo
-        $Password | gh secret set ANDROID_KEYSTORE_PASSWORD --repo $Repo
-        $Alias | gh secret set ANDROID_KEY_ALIAS --repo $Repo
-        $Password | gh secret set ANDROID_KEY_PASSWORD --repo $Repo
+    if ($Gh) {
+        & $Gh auth status 2>$null
+        if ($LASTEXITCODE -ne 0) {
+            & $Gh auth login --hostname github.com --git-protocol https --web
+        }
+        $Base64 | & $Gh secret set ANDROID_KEYSTORE_BASE64 --repo $Repo
+        $Password | & $Gh secret set ANDROID_KEYSTORE_PASSWORD --repo $Repo
+        $Alias | & $Gh secret set ANDROID_KEY_ALIAS --repo $Repo
+        $Password | & $Gh secret set ANDROID_KEY_PASSWORD --repo $Repo
         Write-Host "GITHUB_SIGNING_SECRETS=CONFIGURED" -ForegroundColor Green
     }
     else {
