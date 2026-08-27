@@ -12,7 +12,10 @@ flutter create --platforms=android --project-name $AppName --org $Organization .
 
 $BrandingDirectory = Join-Path $PWD "assets\branding"
 New-Item -ItemType Directory -Force -Path $BrandingDirectory | Out-Null
-Copy-Item "..\public\images\cnet-favicon.png" "$BrandingDirectory\app_icon.png" -Force
+if (-not (Get-Command magick -ErrorAction SilentlyContinue)) {
+    throw "ImageMagick is required. Install it once with: winget install ImageMagick.ImageMagick"
+}
+magick "..\public\images\cnet-web-logo.jpeg" -resize "1024x1024^" -gravity center -extent 1024x1024 "$BrandingDirectory\app_icon.png"
 Copy-Item "..\public\images\cnet-web-logo.jpeg" "$BrandingDirectory\splash_logo.jpeg" -Force
 
 $Manifest = Join-Path $PWD "android\app\src\main\AndroidManifest.xml"
