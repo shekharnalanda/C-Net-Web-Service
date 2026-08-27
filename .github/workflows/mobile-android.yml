@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   build-android:
-    name: Analyze, test and build APK
+    name: Analyze, test and build Android release
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -38,18 +38,31 @@ jobs:
       - name: Generate Android platform
         run: flutter create --platforms=android --project-name cnet_web_services --org com.mciedu .
 
+      - name: Prepare C-Net branding
+        run: |
+          mkdir -p assets/branding
+          cp ../public/images/cnet-favicon.png assets/branding/app_icon.png
+          cp ../public/images/cnet-web-logo.jpeg assets/branding/splash_logo.jpeg
+
       - name: Enable Android network access
         run: |
           manifest="android/app/src/main/AndroidManifest.xml"
           sed -i '/<application/i\    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />' "$manifest"
+          sed -i 's/android:label="cnet_web_services"/android:label="C-Net Web Services"/' "$manifest"
           grep -q 'android.permission.INTERNET' "$manifest"
           grep -q 'android.permission.ACCESS_NETWORK_STATE' "$manifest"
+          grep -q 'android:label="C-Net Web Services"' "$manifest"
 
       - name: Remove generated sample test
         run: rm -f test/widget_test.dart
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Generate branded icon and splash
+        run: |
+          dart run flutter_launcher_icons
+          dart run flutter_native_splash:create
 
       - name: Normalize Dart formatting
         run: dart format lib test
@@ -63,10 +76,21 @@ jobs:
       - name: Build installable APK
         run: flutter build apk --release
 
+      - name: Build Play Store bundle
+        run: flutter build appbundle --release
+
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
           name: C-Net-Web-Services-Android-APK
           path: mobile_app/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload Android App Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: C-Net-Web-Services-Android-AAB
+          path: mobile_app/build/app/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 30
