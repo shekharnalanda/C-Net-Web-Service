@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../core/api_client.dart';
 import 'client_login_screen.dart';
+import 'admin_portal_screen.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -55,7 +56,7 @@ class _MainShellState extends State<MainShell> {
           _HomePage(data: data, onOpen: _open),
           _ServicesPage(data: data),
           _ClientProjectsPage(api: _api, onOpen: _open),
-          _ProfilePage(data: data, onOpen: _open),
+          _ProfilePage(data: data, api: _api, onOpen: _open),
         ];
 
         return Scaffold(
@@ -335,8 +336,9 @@ class _ClientProjectsPageState extends State<_ClientProjectsPage> {
 }
 
 class _ProfilePage extends StatelessWidget {
-  const _ProfilePage({required this.data, required this.onOpen});
+  const _ProfilePage({required this.data, required this.api, required this.onOpen});
   final Map<String, dynamic> data;
+  final ApiClient api;
   final Future<void> Function(String) onOpen;
   @override
   Widget build(BuildContext context) {
@@ -355,6 +357,14 @@ class _ProfilePage extends StatelessWidget {
           ListTile(leading: const Icon(Icons.phone_outlined), title: const Text('Call'), subtitle: Text(brand['phone'].toString()), onTap: () => onOpen('tel:${brand['phone']}')),
           ListTile(leading: const Icon(Icons.chat_outlined), title: const Text('WhatsApp Support'), onTap: () => onOpen('https://wa.me/91${brand['phone']}')),
         ])),
+        const SizedBox(height: 18),
+        Card(child: ListTile(
+          leading: const CircleAvatar(child: Icon(Icons.admin_panel_settings)),
+          title: const Text('Admin / Staff Login', style: TextStyle(fontWeight: FontWeight.bold)),
+          subtitle: const Text('Manage enquiries, trials and projects'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => AdminPortalScreen(api: api))),
+        )),
       ]),
     );
   }
