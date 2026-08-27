@@ -34,6 +34,9 @@ textarea{min-height:115px;resize:vertical}
 .modern{background:linear-gradient(135deg,#061d36,#09a9d1)}
 .professional{background:linear-gradient(135deg,#14213d,#c99700)}
 .creative{background:linear-gradient(135deg,#6a11cb,#ff4e88)}
+.education-pro{background:linear-gradient(135deg,#082f49,#0756a3 56%,#f59e0b)}
+.business-pro{background:linear-gradient(135deg,#111827,#0756a3 60%,#10b981)}
+.pro-ribbon{display:inline-block;margin-top:9px;background:#fff;color:#0756a3;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:900}
 .preview strong{display:block;font-size:20px}.preview small{opacity:.9}
 .template-name{display:block;padding:13px;text-align:center;font-weight:800}
 .template:has(input:checked){border-color:var(--blue);box-shadow:0 0 0 4px #0756a315}
@@ -200,7 +203,11 @@ Trial Website बनाने से पहले इस email पर 6 अं�
             <label>Complete Business Address <span class="required">*</span></label>
             <textarea name="address" required maxlength="1000">{{ old('address') }}</textarea>
 
-            <h2 class="section-title">Choose Free Template</h2>
+            <h2 class="section-title">Choose Professional Website Template</h2>
+            <p class="help" style="font-size:15px;margin:-8px 0 18px">
+                Pro templates are designed as the foundation of your final website.
+                After approval, the same design can be expanded with more pages and CMS features.
+            </p>
 
             <div class="templates">
                 <label class="template">
@@ -231,6 +238,28 @@ Trial Website बनाने से पहले इस email पर 6 अं�
                         <small>Colourful and friendly</small>
                     </span>
                     <span class="template-name">Creative</span>
+                </label>
+
+                <label class="template">
+                    <input type="radio" name="template_key" value="education-pro"
+                           @checked(old('template_key')==='education-pro')>
+                    <span class="preview education-pro">
+                        <strong>Education Pro</strong>
+                        <small>Institute, school &amp; coaching</small>
+                        <span class="pro-ribbon">FINAL WEBSITE READY</span>
+                    </span>
+                    <span class="template-name">Education &amp; Institute Pro</span>
+                </label>
+
+                <label class="template">
+                    <input type="radio" name="template_key" value="business-pro"
+                           @checked(old('template_key')==='business-pro')>
+                    <span class="preview business-pro">
+                        <strong>Business Pro</strong>
+                        <small>Company, shop &amp; services</small>
+                        <span class="pro-ribbon">FINAL WEBSITE READY</span>
+                    </span>
+                    <span class="template-name">Business &amp; Services Pro</span>
                 </label>
             </div>
 
