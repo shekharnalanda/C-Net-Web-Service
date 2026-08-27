@@ -17,6 +17,11 @@ if (-not (Get-Command magick -ErrorAction SilentlyContinue)) {
 }
 magick "..\public\images\cnet-web-logo.jpeg" -resize "1024x1024^" -gravity center -extent 1024x1024 "$BrandingDirectory\app_icon.png"
 Copy-Item "..\public\images\cnet-web-logo.jpeg" "$BrandingDirectory\splash_logo.jpeg" -Force
+magick "$BrandingDirectory\app_icon.png" -resize 48x48 "android\app\src\main\res\mipmap-mdpi\ic_launcher.png"
+magick "$BrandingDirectory\app_icon.png" -resize 72x72 "android\app\src\main\res\mipmap-hdpi\ic_launcher.png"
+magick "$BrandingDirectory\app_icon.png" -resize 96x96 "android\app\src\main\res\mipmap-xhdpi\ic_launcher.png"
+magick "$BrandingDirectory\app_icon.png" -resize 144x144 "android\app\src\main\res\mipmap-xxhdpi\ic_launcher.png"
+magick "$BrandingDirectory\app_icon.png" -resize 192x192 "android\app\src\main\res\mipmap-xxxhdpi\ic_launcher.png"
 
 $Manifest = Join-Path $PWD "android\app\src\main\AndroidManifest.xml"
 $ManifestContent = Get-Content -Raw $Manifest
@@ -35,7 +40,6 @@ Set-Content -Path $Manifest -Value $ManifestContent -Encoding UTF8
 
 Remove-Item "test\widget_test.dart" -Force -ErrorAction SilentlyContinue
 flutter pub get
-dart run flutter_launcher_icons
 dart run flutter_native_splash:create
 dart format lib test
 flutter analyze
