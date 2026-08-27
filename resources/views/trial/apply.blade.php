@@ -164,6 +164,10 @@ button{width:100%;background:linear-gradient(135deg,var(--blue),var(--cyan));col
                     <label>Authority Email <span class="required">*</span></label>
                     <input type="email" name="email" required maxlength="150"
                            value="{{ old('email') }}">
+<div id="email-otp-security-note" style="margin-top:8px;padding:10px 12px;background:#eef7ff;border-left:4px solid #0756a3;border-radius:5px;color:#17324d;font-size:14px;line-height:1.5">
+<strong>Email verification mandatory:</strong>
+Trial Website बनाने से पहले इस email पर 6 अंकों का OTP भेजा जाएगा।
+</div>
                 </div>
             </div>
 
