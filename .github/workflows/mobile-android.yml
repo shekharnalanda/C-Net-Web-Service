@@ -41,8 +41,13 @@ jobs:
       - name: Prepare C-Net branding
         run: |
           mkdir -p assets/branding
-          cp ../public/images/cnet-favicon.png assets/branding/app_icon.png
+          if ! command -v convert >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y imagemagick
+          fi
+          convert ../public/images/cnet-web-logo.jpeg -resize '1024x1024^' -gravity center -extent 1024x1024 assets/branding/app_icon.png
           cp ../public/images/cnet-web-logo.jpeg assets/branding/splash_logo.jpeg
+          identify assets/branding/app_icon.png
 
       - name: Enable Android network access
         run: |
