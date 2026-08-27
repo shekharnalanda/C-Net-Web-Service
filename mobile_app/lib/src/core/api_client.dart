@@ -44,6 +44,43 @@ class ApiClient {
     return _get('/client/me', token: token);
   }
 
+  Future<Map<String, dynamic>> adminLogin(String email, String password) async {
+    final payload = await _post('/admin/login', {
+      'email': email,
+      'password': password,
+      'device_name': 'C-Net Web Services Admin App',
+    });
+    final token = payload['token']?.toString();
+    if (token == null || token.isEmpty) throw ApiException('Admin token was not received.');
+    await tokenStore.saveAdminToken(token);
+    return payload;
+  }
+
+  Future<Map<String, dynamic>> adminDashboard() async {
+    final token = await tokenStore.readAdminToken();
+    if (token == null) throw ApiException('ADMIN_LOGIN_REQUIRED');
+    return _get('/admin/dashboard', token: token);
+  }
+
+  Future<void> updateEnquiryStatus(int id, String status) async {
+    final token = await tokenStore.readAdminToken();
+    if (token == null) throw ApiException('ADMIN_LOGIN_REQUIRED');
+    final response = await _client.patch(
+      Uri.parse('$baseUrl/admin/enquiries/$id'),
+      headers: _headers(token, json: true),
+      body: jsonEncode({'status': status}),
+    ).timeout(const Duration(seconds: 20));
+    _decode(response);
+  }
+
+  Future<void> adminLogout() async {
+    final token = await tokenStore.readAdminToken();
+    if (token != null) {
+      try { await _post('/admin/logout', const {}, token: token); } catch (_) {}
+    }
+    await tokenStore.clearAdminToken();
+  }
+
   Future<void> logout() async {
     final token = await tokenStore.readToken();
     if (token != null) {
