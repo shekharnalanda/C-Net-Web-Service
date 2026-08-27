@@ -38,6 +38,13 @@ jobs:
       - name: Generate Android platform
         run: flutter create --platforms=android --project-name cnet_web_services --org com.mciedu .
 
+      - name: Enable Android network access
+        run: |
+          manifest="android/app/src/main/AndroidManifest.xml"
+          sed -i '/<application/i\    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />' "$manifest"
+          grep -q 'android.permission.INTERNET' "$manifest"
+          grep -q 'android.permission.ACCESS_NETWORK_STATE' "$manifest"
+
       - name: Remove generated sample test
         run: rm -f test/widget_test.dart
 
