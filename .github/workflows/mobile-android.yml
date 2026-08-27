@@ -63,6 +63,22 @@ jobs:
           grep -q 'android.permission.ACCESS_NETWORK_STATE' "$manifest"
           grep -q 'android:label="C-Net Web Services"' "$manifest"
 
+      - name: Configure permanent release signing
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
+            printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/cnet-web-services-upload-key.jks
+            bash tool/configure_android_signing.sh
+            echo "PLAY_STORE_SIGNING=enabled" >> "$GITHUB_ENV"
+          else
+            echo "PLAY_STORE_SIGNING=not-configured" >> "$GITHUB_ENV"
+            echo "Permanent signing secrets are not configured; producing an installable test release."
+          fi
+
       - name: Remove generated sample test
         run: rm -f test/widget_test.dart
 
@@ -86,6 +102,11 @@ jobs:
 
       - name: Build Play Store bundle
         run: flutter build appbundle --release
+
+      - name: Verify release signing
+        run: |
+          jarsigner -verify -certs build/app/outputs/bundle/release/app-release.aab
+          echo "Signing mode: $PLAY_STORE_SIGNING"
 
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
