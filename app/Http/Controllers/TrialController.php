@@ -150,16 +150,31 @@ class TrialController extends Controller
 
         AdminNotificationService::sendTrialApplication($data);
 
-        return back()
-            ->with(
-                'success',
-                'Your free website has been created successfully and is active for 7 days.'
-            )
-            ->with('trial_url', $trialUrl)
-            ->with(
-                'trial_expires_at',
-                Carbon::parse($data['expires_at'])->format('d M Y, h:i A')
-            );
+        $request->session()->put('trial_creation_success', [
+            'website_name' => $data['website_name'],
+            'business_name' => $data['business_name'],
+            'trial_url' => $trialUrl,
+            'desired_slug' => $data['desired_slug'],
+            'expires_at' => Carbon::parse($data['expires_at'])->format('d M Y, h:i A'),
+            'template_key' => $data['template_key'],
+        ]);
+
+        return redirect()->route('trial.success');
+    }
+
+    public function success(Request $request)
+    {
+        $website = $request->session()->get('trial_creation_success');
+
+        if (!$website || empty($website['trial_url'])) {
+            return redirect()
+                ->route('trial.apply')
+                ->withErrors([
+                    'trial' => 'Create a Trial Website to view its welcome page.',
+                ]);
+        }
+
+        return view('trial.success', compact('website'));
     }
 
     public function index()
