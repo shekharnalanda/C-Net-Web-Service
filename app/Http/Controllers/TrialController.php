@@ -50,6 +50,8 @@ class TrialController extends Controller
         'modern',
         'professional',
         'creative',
+        'education-pro',
+        'business-pro',
     ];
 
     public function create()
