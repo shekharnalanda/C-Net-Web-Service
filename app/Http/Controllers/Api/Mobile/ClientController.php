@@ -16,7 +16,7 @@ class ClientController extends Controller
             ->whereRaw('LOWER(email) = ?', [$email])
             ->latest('created_at')
             ->get([
-                'id', 'website_name', 'business_name', 'desired_slug', 'trial_url',
+                'id', 'website_name', 'business_name', 'owner_name', 'email', 'desired_slug', 'trial_url',
                 'template_key', 'status', 'starts_at', 'expires_at', 'upgraded_at',
             ]);
 
