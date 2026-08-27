@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../core/api_client.dart';
+import 'client_login_screen.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -53,7 +54,7 @@ class _MainShellState extends State<MainShell> {
         final pages = [
           _HomePage(data: data, onOpen: _open),
           _ServicesPage(data: data),
-          _ProjectsPage(onOpen: _open),
+          _ClientProjectsPage(api: _api, onOpen: _open),
           _ProfilePage(data: data, onOpen: _open),
         ];
 
@@ -204,30 +205,132 @@ class _ServicesPage extends StatelessWidget {
   }
 }
 
-class _ProjectsPage extends StatelessWidget {
-  const _ProjectsPage({required this.onOpen});
+class _ClientProjectsPage extends StatefulWidget {
+  const _ClientProjectsPage({required this.api, required this.onOpen});
+  final ApiClient api;
   final Future<void> Function(String) onOpen;
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('My Projects')),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(28),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              const Icon(Icons.web_asset_rounded, size: 76, color: Color(0xFF0756A3)),
-              const SizedBox(height: 18),
-              const Text('Create or manage your website', textAlign: TextAlign.center, style: TextStyle(fontSize: 23, fontWeight: FontWeight.w900)),
-              const SizedBox(height: 9),
-              const Text('Client login, trial status and project tracking will be enabled in the secured client module.', textAlign: TextAlign.center),
-              const SizedBox(height: 22),
-              FilledButton.icon(
-                onPressed: () => onOpen('https://web.mciedu.com/trial/apply'),
-                icon: const Icon(Icons.add),
-                label: const Text('Create Trial Website'),
-              ),
-            ]),
-          ),
-        ),
+  State<_ClientProjectsPage> createState() => _ClientProjectsPageState();
+}
+
+class _ClientProjectsPageState extends State<_ClientProjectsPage> {
+  Future<Map<String, dynamic>>? future;
+
+  @override
+  void initState() {
+    super.initState();
+    future = widget.api.clientDashboard();
+  }
+
+  void reload() => setState(() => future = widget.api.clientDashboard());
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder<Map<String, dynamic>>(
+        future: future,
+        builder: (context, snapshot) {
+          if (snapshot.hasError && snapshot.error.toString().contains('LOGIN_REQUIRED')) {
+            return ClientLoginScreen(api: widget.api, onAuthenticated: reload);
+          }
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Scaffold(
+              appBar: AppBar(title: Text('My Websites')),
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+          if (snapshot.hasError || !snapshot.hasData) {
+            return Scaffold(
+              appBar: AppBar(title: const Text('My Websites')),
+              body: Center(child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Text(snapshot.error.toString(), textAlign: TextAlign.center),
+                  const SizedBox(height: 16),
+                  FilledButton.icon(onPressed: reload, icon: const Icon(Icons.refresh), label: const Text('Retry')),
+                  TextButton(onPressed: () async { await widget.api.logout(); reload(); }, child: const Text('Sign out')),
+                ]),
+              )),
+            );
+          }
+
+          final data = snapshot.data!;
+          final client = Map<String, dynamic>.from(data['client'] as Map);
+          final trials = List<Map<String, dynamic>>.from(
+            (data['trials'] as List).map((e) => Map<String, dynamic>.from(e as Map)),
+          );
+          final projects = List<Map<String, dynamic>>.from(
+            (data['projects'] as List).map((e) => Map<String, dynamic>.from(e as Map)),
+          );
+
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('My Websites'),
+              actions: [
+                IconButton(
+                  tooltip: 'Sign out',
+                  onPressed: () async { await widget.api.logout(); reload(); },
+                  icon: const Icon(Icons.logout),
+                ),
+              ],
+            ),
+            body: RefreshIndicator(
+              onRefresh: () async => reload(),
+              child: ListView(padding: const EdgeInsets.all(16), children: [
+                Text('Welcome, ${client['name'] ?? 'Client'}', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
+                Text(client['email'].toString()),
+                const SizedBox(height: 24),
+                const Text('Trial Websites', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 10),
+                if (trials.isEmpty) const Card(child: Padding(padding: EdgeInsets.all(18), child: Text('No Trial Website found.'))),
+                ...trials.map((trial) => Card(
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(16),
+                    leading: const CircleAvatar(child: Icon(Icons.language)),
+                    title: Text((trial['website_name'] ?? trial['business_name']).toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text('Status: ${trial['status']}\n${trial['trial_url'] ?? ''}'),
+                    isThreeLine: true,
+                    trailing: trial['trial_url'] == null ? null : const Icon(Icons.open_in_new),
+                    onTap: trial['trial_url'] == null ? null : () => widget.onOpen(trial['trial_url'].toString()),
+                  ),
+                )),
+                const SizedBox(height: 22),
+                const Text('Final Website Projects', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 10),
+                if (projects.isEmpty) const Card(child: Padding(padding: EdgeInsets.all(18), child: Text('No final project has been created yet.'))),
+                ...projects.map((project) {
+                  final done = int.tryParse(project['progress_completed'].toString()) ?? 0;
+                  final total = int.tryParse(project['progress_total'].toString()) ?? 0;
+                  final progress = total == 0 ? 0.0 : done / total;
+                  return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Text(project['project_name'].toString(), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                        const SizedBox(height: 5),
+                        Text('Project: ${project['project_status']} • Payment: ${project['payment_status']}'),
+                        const SizedBox(height: 12),
+                        LinearProgressIndicator(value: progress),
+                        const SizedBox(height: 6),
+                        Text('$done of $total deployment steps completed'),
+                        if (project['custom_domain'] != null) TextButton.icon(
+                          onPressed: () => widget.onOpen('https://${project['custom_domain']}'),
+                          icon: const Icon(Icons.open_in_new),
+                          label: Text(project['custom_domain'].toString()),
+                        ),
+                      ]),
+                    ),
+                  );
+                }),
+                const SizedBox(height: 18),
+                OutlinedButton.icon(
+                  onPressed: () => widget.onOpen('https://web.mciedu.com/trial/apply'),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Create Another Trial Website'),
+                ),
+              ]),
+            ),
+          );
+        },
       );
 }
 
