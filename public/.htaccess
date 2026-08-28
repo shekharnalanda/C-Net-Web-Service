@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    # Canonical host: redirect only www.web to main Web Services domain
+    RewriteCond %{HTTP_HOST} ^www\.web\.mciedu\.com$ [NC]
+    RewriteRule ^ https://web.mciedu.com%{REQUEST_URI} [L,R=301]
+
     # Force HTTP traffic to HTTPS
     RewriteCond %{HTTPS} !=on
     RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
