@@ -1,0 +1,56 @@
+name: Laravel CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  laravel:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, bcmath, curl, dom, fileinfo, iconv, openssl, pdo_sqlite, sqlite3, tokenizer
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs
+          rm -f database/database.sqlite
+          touch database/database.sqlite
+          php artisan key:generate
+
+      - name: Run migrations
+        env:
+          APP_ENV: testing
+          APP_DEBUG: true
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: php artisan migrate --force
+
+      - name: Verify routes
+        env:
+          APP_ENV: testing
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: php artisan route:list
+
+      - name: Run tests
+        env:
+          APP_ENV: testing
+          APP_DEBUG: true
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
+          MCI_CENTRAL_SYNC_ENABLED: false
+        run: php artisan test
