@@ -27,6 +27,30 @@ class AdminNotificationService
 
     public static function sendTrialApplication(array $data): void
     {
+        app(CentralSyncService::class)->admission([
+            'business_code' => config('services.mci_central.business_code'),
+            'source_reference_id' => 'web-trial-'.$data['desired_slug'],
+            'source_site' => config('app.url', 'https://web.mciedu.com'),
+            'application_reference' => 'WEB-TRIAL-'.strtoupper($data['desired_slug']),
+            'applicant_name' => $data['owner_name'],
+            'phone' => $data['phone'],
+            'email' => $data['email'] ?? null,
+            'course_program' => 'Trial Website - '.$data['category'],
+            'status' => $data['status'] ?? 'pending',
+            'payment_status' => 'unpaid',
+            'submitted_at' => isset($data['created_at'])
+                ? (string) $data['created_at']
+                : now()->toIso8601String(),
+            'metadata' => [
+                'business_name' => $data['business_name'],
+                'website_name' => $data['website_name'] ?? $data['business_name'],
+                'desired_slug' => $data['desired_slug'],
+                'trial_url' => $data['trial_url'] ?? 'https://'.$data['desired_slug'].'.mciedu.com',
+                'template_key' => $data['template_key'] ?? null,
+                'category' => $data['category'],
+            ],
+        ]);
+
         $message = implode("\n", [
             'A new trial website application has been received.',
             '',
