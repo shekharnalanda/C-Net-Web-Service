@@ -9,7 +9,7 @@ on:
       - '.github/workflows/mobile-android.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: cnet-web-services-android-${{ github.ref }}
@@ -123,3 +123,18 @@ jobs:
           path: mobile_app/build/app/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish permanent website APK download
+        working-directory: ${{ github.workspace }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp mobile_app/build/app/outputs/flutter-apk/app-release.apk C-Net-Web-Services.apk
+          if gh release view android-latest >/dev/null 2>&1; then
+            gh release upload android-latest C-Net-Web-Services.apk --clobber
+          else
+            gh release create android-latest C-Net-Web-Services.apk \
+              --title "C-Net Web Services Android App" \
+              --notes "Latest signed Android installation package for C-Net Web Services." \
+              --latest
+          fi
