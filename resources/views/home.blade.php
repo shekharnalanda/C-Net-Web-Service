@@ -55,6 +55,10 @@
         .contact-list div{padding:10px 0}
         footer{background:#04182b;color:#b9cada;padding:28px 0;text-align:center}
         footer strong{color:#fff}
+        .footer-app{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+        .footer-app p{margin:0;color:#d8e7f5}
+        .app-download{display:inline-flex;align-items:center;gap:9px;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;text-decoration:none;padding:12px 20px;border-radius:10px;font-weight:800;box-shadow:0 8px 22px #0004}
+        .app-download:hover{transform:translateY(-2px);background:linear-gradient(135deg,#15803d,#16a34a)}
         @media(max-width:850px){
             .hero-grid,.contact-box,.trial-wrap{grid-template-columns:1fr}
             .grid{grid-template-columns:1fr 1fr}
@@ -177,6 +181,14 @@
 
 <footer>
     <div class="container">
+        <div class="footer-app">
+            <p>Use our services easily from your Android mobile.</p>
+            <a class="app-download"
+               href="https://github.com/shekharnalanda/C-Net-Web-Service/releases/download/android-latest/C-Net-Web-Services.apk"
+               aria-label="Download and install C-Net Web Services Android app">
+                <span aria-hidden="true">&#9654;</span> Install Mobile App
+            </a>
+        </div>
         © {{ date('Y') }} <strong>C-Net Web Services</strong>. All Rights Reserved.
     </div>
 </footer>
