@@ -12,12 +12,14 @@ nav{display:flex;justify-content:space-between;align-items:center}.brand{display
 .hero{text-align:center;background:linear-gradient(125deg,#061d36,#0756a3,#09a9d1);color:#fff;padding:65px 20px}
 .hero h1{font-size:clamp(38px,6vw,58px);margin:0 0 12px}.hero p{font-size:18px;color:#dcefff}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:23px;padding:45px 0 70px}
-.card{background:#fff;border:1px solid #dce7f1;border-radius:18px;padding:29px;position:relative;box-shadow:0 10px 30px #00000009}
+.card{background:#fff;border:1px solid #dce7f1;border-radius:18px;padding:29px;position:relative;box-shadow:0 10px 30px #00000009;display:flex;flex-direction:column}
 .card.featured{border:2px solid #08a5cf;transform:translateY(-8px)}
 .tag{position:absolute;right:18px;top:-13px;background:#08a5cf;color:#fff;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800}
 .card h2{color:#07223d;margin:3px 0}.type{color:#0756a3;font-weight:700}.price{font-size:26px;font-weight:900;color:#07223d;margin:18px 0 4px}.duration{color:#64748b}
-ul{padding:0;margin:23px 0;list-style:none}li{padding:8px 0;border-bottom:1px solid #edf2f7}li:before{content:"✓";color:#07934a;font-weight:900;margin-right:9px}
-.btn{display:block;text-align:center;background:linear-gradient(135deg,#0756a3,#09a9d1);color:#fff;text-decoration:none;padding:12px;border-radius:8px;font-weight:800}
+ul{padding:0;margin:23px 0 12px;list-style:none}li{padding:8px 0;border-bottom:1px solid #edf2f7}li:before{content:"✓";color:#07934a;font-weight:900;margin-right:9px}
+.more{margin:0 0 22px;border:1px solid #d8e7f4;border-radius:10px;background:#f8fbfe;overflow:hidden}.more summary{cursor:pointer;color:#0756a3;font-weight:800;padding:12px 14px;list-style:none;display:flex;justify-content:space-between;align-items:center}.more summary::-webkit-details-marker{display:none}.more summary:after{content:"+";font-size:21px;line-height:1}.more[open] summary:after{content:"−"}.more[open] summary{border-bottom:1px solid #d8e7f4}.more ul{margin:0;padding:3px 14px 10px;background:#fff}.more li:last-child{border-bottom:0}
+.btn{display:block;text-align:center;background:linear-gradient(135deg,#0756a3,#09a9d1);color:#fff;text-decoration:none;padding:12px;border-radius:8px;font-weight:800;margin-top:auto}
+.note{max-width:900px;margin:-35px auto 55px;text-align:center;color:#52677b;font-size:14px;line-height:1.6}
 .empty{text-align:center;padding:60px}
 @media(max-width:850px){.grid{grid-template-columns:1fr 1fr}.card.featured{transform:none}}
 @media(max-width:560px){.grid{grid-template-columns:1fr}}
@@ -30,23 +32,42 @@ ul{padding:0;margin:23px 0;list-style:none}li{padding:8px 0;border-bottom:1px so
 
 <div class="container grid">
 @forelse($plans as $plan)
+    @php
+        $features = collect(preg_split('/\r\n|\r|\n/', $plan->features))
+            ->map(fn ($feature) => trim($feature))
+            ->filter()
+            ->values();
+        $highlights = $features->take(5);
+        $details = $features->slice(5);
+    @endphp
     <article class="card {{ $plan->is_featured ? 'featured' : '' }}">
-        @if($plan->is_featured)<span class="tag">RECOMMENDED</span>@endif
+        @if($plan->is_featured)<span class="tag">MOST POPULAR</span>@endif
         <div class="type">{{ $plan->service_type }}</div>
         <h2>{{ $plan->title }}</h2>
         <div class="price">{{ $plan->price_label }}</div>
         @if($plan->duration)<div class="duration">{{ $plan->duration }}</div>@endif
         <ul>
-            @foreach(preg_split('/\r\n|\r|\n/', $plan->features) as $feature)
-                @if(trim($feature) !== '')<li>{{ trim($feature) }}</li>@endif
+            @foreach($highlights as $feature)
+                <li>{{ $feature }}</li>
             @endforeach
         </ul>
+        @if($details->isNotEmpty())
+            <details class="more">
+                <summary><span>Read More Details</span></summary>
+                <ul>
+                    @foreach($details as $feature)
+                        <li>{{ $feature }}</li>
+                    @endforeach
+                </ul>
+            </details>
+        @endif
         <a class="btn" href="{{ route('enquiry.create') }}">Choose This Plan</a>
     </article>
 @empty
     <div class="empty">Plans will be available soon.</div>
 @endforelse
 </div>
+<p class="container note">Domain and hosting are included for the first year. SMS/OTP, payment gateway, paid APIs and other third-party charges are billed separately. Renewal and custom development charges depend on the selected requirement.</p>
     @include('partials.contact-buttons')
 </body>
 </html>
