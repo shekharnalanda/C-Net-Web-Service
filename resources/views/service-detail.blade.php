@@ -1,36 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{{ $service->title }} | C-Net Web Services</title>
-<meta name="description" content="{{ $service->short_description }}">
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#2b3e50;background:#f5f8fc}
-header{background:#fff;padding:16px 0;box-shadow:0 2px 12px #00000012}.container{width:min(950px,92%);margin:auto}
-nav{display:flex;justify-content:space-between;align-items:center}nav strong{color:#07223d;font-size:21px}nav a{text-decoration:none;color:#0756a3;font-weight:700}
-.hero{background:linear-gradient(125deg,#061d36,#0756a3,#09a9d1);color:#fff;padding:70px 0}
-.icon{font-size:52px}.hero h1{font-size:clamp(38px,6vw,58px);margin:10px 0}.hero p{font-size:19px;color:#e0f0ff}
-.content{background:#fff;margin:35px auto;padding:38px;border-radius:18px;box-shadow:0 10px 35px #0000000c}
-.content h2{color:#07223d}.details{white-space:pre-line;font-size:17px;line-height:1.8}
-.btn{display:inline-block;margin-top:26px;padding:13px 22px;background:linear-gradient(135deg,#0756a3,#09a9d1);color:#fff;text-decoration:none;border-radius:8px;font-weight:800}
-</style>
-    @include('partials.seo')
-</head>
-<body>
-<header><nav class="container"><strong>C-Net Web Services</strong><a href="/">← Home</a></nav></header>
-<section class="hero">
-<div class="container">
-    <div class="icon">{{ $service->icon }}</div>
-    <h1>{{ $service->title }}</h1>
-    <p>{{ $service->short_description }}</p>
-</div>
-</section>
-<div class="container content">
-    <h2>Service Details</h2>
-    <div class="details">{{ $service->description }}</div>
-    <a class="btn" href="{{ route('enquiry.create') }}">Request This Service</a>
-</div>
-    @include('partials.contact-buttons')
-</body>
-</html>
+@extends('layouts.public')
+@section('title', ($guide['label'] ?? $service->title).' | C-Net Web Services')
+@section('description', $service->short_description)
+@section('content')
+<section class="hero detail-hero"><div class="container"><nav class="breadcrumbs" aria-label="आप यहाँ हैं"><a href="{{ route('home') }}">होम पेज</a><span>/</span><a href="{{ route('home') }}#services">हमारी सेवाएँ</a><span>/</span><span aria-current="page">{{ $service->title }}</span></nav><div class="detail-hero-grid"><div><span class="eyebrow">C-Net Web Services • सेवा का पूरा विवरण</span><h1>{{ $guide['label'] ?? $service->title }}</h1><span class="detail-english">{{ $service->title }}</span><p>{{ $service->short_description }}</p><div class="actions"><a class="btn btn-white" href="{{ route('enquiry.create', ['service' => $service->slug]) }}">इस सेवा की जरूरत बताएँ</a><a class="btn btn-outline" href="{{ route('home') }}#services">सभी सेवाएँ देखें</a></div></div><aside class="hero-panel"><h2>आपके लिए अगला कदम</h2><p>अपनी संस्था, अभी की व्यवस्था और जरूरी सुविधाएँ बताएँ। काम का दायरा, समय, लागत और Support चर्चा के बाद प्रस्ताव में तय होंगे।</p><a href="tel:+917782801846">+91 77828 01846 पर बात करें →</a></aside></div></div></section>
+<section><div class="container detail-intro"><div><span class="section-label">सेवा को समझें</span><h2>यह सेवा आपके काम में कैसे मदद करेगी?</h2><div class="body-copy preserve-lines">{{ $service->description }}</div></div>@if($guide)<aside class="audience-box"><span class="section-label">किसके लिए उपयोगी?</span><p>{{ $guide['for'] }}</p></aside>@endif</div></section>
+@if($guide)
+<section class="soft" id="features"><div class="container"><div class="section-head"><span class="section-label">विषयवार जानकारी</span><h2>किन कामों की व्यवस्था की जा सकती है?</h2><p>नीचे संभावित काम समझाए गए हैं। आपके लिए जरूरी सुविधाएँ चुने हुए कार्य-दायरे में शामिल की जाएँगी।</p></div><div class="feature-grid">@foreach($guide['sections'] as $section)<article class="feature-card"><span>{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span><h3>{{ $section['title'] }}</h3><p>{{ $section['text'] }}</p></article>@endforeach</div></div></section>
+<section><div class="container example-box"><span class="section-label">एक व्यावहारिक उदाहरण</span><h2>आपके काम में इसका उपयोग</h2><p>{{ $guide['example'] }}</p></div></section>
+<section class="soft"><div class="container two-lists"><article><span class="section-label">कार्य-दायरा तय होने पर</span><h2>क्या तैयार करके दिया जा सकता है?</h2><ul>@foreach($guide['deliverables'] as $line)<li>{{ $line }}</li>@endforeach</ul></article><article><span class="section-label">तैयारी में आपकी भूमिका</span><h2>आपसे क्या जानकारी चाहिए?</h2><ul>@foreach($guide['inputs'] as $line)<li>{{ $line }}</li>@endforeach</ul></article></div></section>
+@endif
+<section><div class="container service-next"><div><span class="section-label">प्रस्ताव और शुरुआत</span><h2>आपकी जरूरत के अनुसार समाधान तय करें</h2><p>जरूरत → दायरा और प्रस्ताव → Design/Setup → Development व Testing → Live उपयोग और Training → तय Support। हर काम में लागू चरण पहले स्पष्ट किए जाएँगे।</p><p>Features, Users, Data Migration, Integrations और Support के अनुसार लागत व समय तय होते हैं। Website के प्रकाशित Plans भी देख सकते हैं।</p><div class="actions"><a class="btn btn-primary" href="{{ route('enquiry.create', ['service' => $service->slug]) }}">{{ $service->title }} के लिए Enquiry</a><a class="btn btn-light" href="{{ route('plans') }}">Website Plans</a></div></div><a class="text-link" href="{{ route('home') }}#process">काम की पूरी प्रक्रिया पढ़ें →</a></div></section>
+@if($related->isNotEmpty())<section class="soft"><div class="container"><div class="section-head"><span class="section-label">अन्य जरूरतों के लिए</span><h2>संबंधित सेवाएँ भी जानें</h2></div><div class="service-grid">@foreach($related as $item)@include('partials.service-card')@endforeach</div><div class="center-actions"><a class="btn btn-light" href="{{ route('home') }}">← सीधे होम पेज पर लौटें</a></div></div></section>@endif
+@endsection

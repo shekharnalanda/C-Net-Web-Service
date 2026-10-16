@@ -6,10 +6,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class ServiceController extends Controller
 {
-    public function show(string $slug)
+    public function home(): View
+    {
+        $services = DB::table('services')->where('is_active', true)
+            ->orderBy('sort_order')->orderBy('title')->get()
+            ->filter(fn ($service) => config('service-guide.services.'.$service->slug.'.home', true));
+
+        return view('home', compact('services'));
+    }
+
+    public function show(string $slug): View
     {
         $service = DB::table('services')
             ->where('slug', $slug)
@@ -18,7 +28,13 @@ class ServiceController extends Controller
 
         abort_unless($service, 404);
 
-        return view('service-detail', compact('service'));
+        $guide = config('service-guide.services.'.$slug);
+        $related = DB::table('services')->where('is_active', true)->where('slug', '!=', $slug)
+            ->orderBy('sort_order')->get()
+            ->filter(fn ($item) => config('service-guide.services.'.$item->slug.'.home', true))
+            ->take(3);
+
+        return view('service-detail', compact('service', 'guide', 'related'));
     }
 
     public function index()

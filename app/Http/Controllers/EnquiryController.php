@@ -11,7 +11,10 @@ class EnquiryController extends Controller
 {
     public function create()
     {
-        return view('enquiry');
+        $services = DB::table('services')->where('is_active', true)->orderBy('sort_order')->get();
+        $selectedService = $services->firstWhere('slug', request()->query('service'));
+
+        return view('enquiry', compact('services', 'selectedService'));
     }
 
     public function store(Request $request, CentralSyncService $centralSync)

@@ -2,7 +2,7 @@
     $host = request()->getHost();
     $path = request()->path();
 
-    $seoDescription = match (true) {
+    $seoDescription = $publicPageDescription ?? match (true) {
         request()->is('plans') =>
             'Affordable website design, domain, hosting, SEO and digital promotion plans from C-Net Web Services.',
         request()->is('enquiry') =>
@@ -30,7 +30,7 @@
         'url' => 'https://web.mciedu.com',
         'logo' => 'https://web.mciedu.com/images/cnet-favicon.png',
         'image' => 'https://web.mciedu.com/images/cnet-web-og.jpg',
-        'description' => 'Domain, hosting, website design, SEO and digital promotion services.',
+        'description' => 'Website development, Digital Marketing, CRM, School ERP, Custom Software and Business Digitization services.',
         'areaServed' => 'India',
         'serviceType' => [
             'Domain Registration',
@@ -39,6 +39,11 @@
             'Website Development',
             'Search Engine Optimization',
             'Digital Promotion',
+            'CRM and Lead Management',
+            'School ERP',
+            'Custom Software',
+            'Business Digitization',
+            'Maintenance and Technical Support',
         ],
     ];
 @endphp
@@ -60,14 +65,14 @@ gtag("config", "G-0BXSP581FD", { anonymize_ip: true });
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="C-Net Web Services">
-<meta property="og:title" content="@yield('title', 'C-Net Web Services | Complete Website Solutions')">
+<meta property="og:title" content="{{ $publicPageTitle ?? 'C-Net Web Services | Complete Website Solutions' }}">
 <meta property="og:description" content="{{ $seoDescription }}">
 <meta property="og:url" content="{{ $canonicalUrl }}">
-<meta property="og:locale" content="en_IN">
+<meta property="og:locale" content="{{ isset($publicPageTitle) ? 'hi_IN' : 'en_IN' }}">
 <meta property="og:image" content="https://web.mciedu.com/images/cnet-web-og.jpg">
 
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="@yield('title', 'C-Net Web Services | Complete Website Solutions')">
+<meta name="twitter:title" content="{{ $publicPageTitle ?? 'C-Net Web Services | Complete Website Solutions' }}">
 <meta name="twitter:description" content="{{ $seoDescription }}">
 <meta name="twitter:image" content="https://web.mciedu.com/images/cnet-web-og.jpg">
 

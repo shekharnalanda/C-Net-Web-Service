@@ -6,18 +6,19 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TrialController;
+use App\Http\Controllers\TrialEmailOtpController;
+use App\Http\Controllers\TrialWebsiteAdminController;
+use App\Http\Controllers\WebsiteProjectController;
 use Illuminate\Support\Facades\Route;
 
-Route::domain('web.mciedu.com')->get('/', function () {
-    return view('home');
-});
+Route::domain('web.mciedu.com')->get('/', [ServiceController::class, 'home']);
 
 Route::domain('{slug}.mciedu.com')->get('/', [TrialController::class, 'show'])
     ->name('trial.subdomain');
 
 Route::domain('{slug}.web.mciedu.com')->get('/', [TrialController::class, 'show'])
     ->name('trial.subdomain.legacy');
-Route::view('/', 'home')->name('home');
+Route::get('/', [ServiceController::class, 'home'])->name('home');
 Route::redirect('/login', '/admin/login')->name('login');
 Route::get('/privacy-policy', [PrivacyController::class, 'policy'])->name('privacy-policy');
 Route::get('/account-deletion', [PrivacyController::class, 'deletionForm'])->name('account-deletion.form');
@@ -30,21 +31,21 @@ Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('servic
 Route::get('/plans', [PlanController::class, 'publicIndex'])->name('plans');
 
 Route::get('/trial/apply', [TrialController::class, 'create'])->name('trial.apply');
-Route::post('/trial/apply', [\App\Http\Controllers\TrialEmailOtpController::class, 'send'])->middleware('throttle:3,10')->name('trial.store');
+Route::post('/trial/apply', [TrialEmailOtpController::class, 'send'])->middleware('throttle:3,10')->name('trial.store');
 
 Route::get(
     '/trial/verify-email',
-    [\App\Http\Controllers\TrialEmailOtpController::class, 'form']
+    [TrialEmailOtpController::class, 'form']
 )->name('trial.email.verify.form');
 
 Route::post(
     '/trial/verify-email',
-    [\App\Http\Controllers\TrialEmailOtpController::class, 'verify']
+    [TrialEmailOtpController::class, 'verify']
 )->middleware('throttle:6,10')->name('trial.email.verify');
 
 Route::post(
     '/trial/resend-email-otp',
-    [\App\Http\Controllers\TrialEmailOtpController::class, 'resend']
+    [TrialEmailOtpController::class, 'resend']
 )->middleware('throttle:3,10')->name('trial.email.resend');
 
 Route::get(
@@ -91,45 +92,45 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 });
 
 Route::middleware('auth')->prefix('admin')->group(function () {
-    Route::get('/projects', [\App\Http\Controllers\WebsiteProjectController::class, 'index'])
+    Route::get('/projects', [WebsiteProjectController::class, 'index'])
         ->name('admin.projects.index');
 
-    Route::get('/trials/{trialId}/convert', [\App\Http\Controllers\WebsiteProjectController::class, 'create'])
+    Route::get('/trials/{trialId}/convert', [WebsiteProjectController::class, 'create'])
         ->name('admin.projects.convert');
 
-    Route::post('/trials/{trialId}/convert', [\App\Http\Controllers\WebsiteProjectController::class, 'store'])
+    Route::post('/trials/{trialId}/convert', [WebsiteProjectController::class, 'store'])
         ->name('admin.projects.store');
 
-    Route::get('/projects/{id}', [\App\Http\Controllers\WebsiteProjectController::class, 'show'])
+    Route::get('/projects/{id}', [WebsiteProjectController::class, 'show'])
         ->name('admin.projects.show');
 
-    Route::patch('/projects/{id}', [\App\Http\Controllers\WebsiteProjectController::class, 'update'])
+    Route::patch('/projects/{id}', [WebsiteProjectController::class, 'update'])
         ->name('admin.projects.update');
 });
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get(
         '/trial-websites/{id}/edit',
-        [\App\Http\Controllers\TrialWebsiteAdminController::class, 'edit']
+        [TrialWebsiteAdminController::class, 'edit']
     )->name('admin.trial-websites.edit');
 
     Route::patch(
         '/trial-websites/{id}',
-        [\App\Http\Controllers\TrialWebsiteAdminController::class, 'update']
+        [TrialWebsiteAdminController::class, 'update']
     )->name('admin.trial-websites.update');
 
     Route::patch(
         '/trial-websites/{id}/suspend',
-        [\App\Http\Controllers\TrialWebsiteAdminController::class, 'suspend']
+        [TrialWebsiteAdminController::class, 'suspend']
     )->name('admin.trial-websites.suspend');
 
     Route::patch(
         '/trial-websites/{id}/restore',
-        [\App\Http\Controllers\TrialWebsiteAdminController::class, 'restore']
+        [TrialWebsiteAdminController::class, 'restore']
     )->name('admin.trial-websites.restore');
 
     Route::delete(
         '/trial-websites/{id}',
-        [\App\Http\Controllers\TrialWebsiteAdminController::class, 'destroy']
+        [TrialWebsiteAdminController::class, 'destroy']
     )->name('admin.trial-websites.destroy');
 });

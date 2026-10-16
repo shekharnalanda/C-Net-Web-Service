@@ -1,0 +1,2 @@
+@php($cardGuide = config('service-guide.services.'.$item->slug))
+<article class="service-card"><span class="service-icon" aria-hidden="true">{{ $item->icon }}</span><h3><a href="{{ route('services.show', $item->slug) }}">{{ $cardGuide['label'] ?? $item->title }}</a></h3><span class="english-label">{{ $item->title }}</span><p>{{ $item->short_description }}</p><a class="detail-link" href="{{ route('services.show', $item->slug) }}">पूरा विवरण पढ़ें <span aria-hidden="true">→</span><span class="sr-only"> — {{ $item->title }}</span></a></article>
