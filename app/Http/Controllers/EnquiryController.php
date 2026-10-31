@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Services\AdminNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class EnquiryController extends Controller
 {
@@ -46,6 +48,14 @@ $enquiryId = DB::table('enquiries')->insertGetId([
         ]);
 
         AdminNotificationService::sendEnquiry($data);
+
+        try {
+            Mail::raw('Thank you for contacting C-Net Web Services. We have received your enquiry and our team will get back to you soon.', function ($mail) use ($data) {
+                $mail->to($data['email'])->subject('C-Net Web Services - Enquiry Received');
+            });
+        } catch (\\Throwable $exception) {
+            Log::warning('Enquiry confirmation email failed', ['error' => $exception->getMessage()]);
+        }
 
         return back()->with('success', 'Thank you! Your enquiry has been submitted successfully.');
     }
