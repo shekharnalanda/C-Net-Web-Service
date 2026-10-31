@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EnquiryController;
+use App\Http\Controllers\EnquiryEmailOtpController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\ServiceController;
@@ -25,6 +26,8 @@ Route::get('/account-deletion', [PrivacyController::class, 'deletionForm'])->nam
 Route::post('/account-deletion', [PrivacyController::class, 'requestDeletion'])
     ->middleware('throttle:3,60')->name('account-deletion.request');
 
+Route::post('/enquiry/email-otp', [EnquiryEmailOtpController::class, 'send'])->middleware('throttle:3,10')->name('enquiry.email-otp.send');
+Route::post('/enquiry/email-otp/verify', [EnquiryEmailOtpController::class, 'verify'])->middleware('throttle:6,10')->name('enquiry.email-otp.verify');
 Route::get('/enquiry', [EnquiryController::class, 'create'])->name('enquiry.create');
 Route::post('/enquiry', [EnquiryController::class, 'store'])->middleware('throttle:10,1')->name('enquiry.store');
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
