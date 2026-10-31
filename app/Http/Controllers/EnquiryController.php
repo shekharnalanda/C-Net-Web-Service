@@ -21,7 +21,7 @@ class EnquiryController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'phone' => ['required', 'string', 'max:20'],
-            'email' => ['required', 'email, 'max:150'],
+            'email' => ['required', 'email', 'max:150'],
             'service' => ['required', 'string', 'max:100'],
             'message' => ['nullable', 'string', 'max:2000'],
         ]);
