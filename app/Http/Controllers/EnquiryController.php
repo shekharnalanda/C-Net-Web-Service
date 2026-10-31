@@ -53,7 +53,7 @@ $enquiryId = DB::table('enquiries')->insertGetId([
             Mail::raw('Thank you for contacting C-Net Web Services. We have received your enquiry and our team will get back to you soon.', function ($mail) use ($data) {
                 $mail->to($data['email'])->subject('C-Net Web Services - Enquiry Received');
             });
-        } catch (\\Throwable $exception) {
+        } catch (\Throwable $exception) {
             Log::warning('Enquiry confirmation email failed', ['error' => $exception->getMessage()]);
         }
 
