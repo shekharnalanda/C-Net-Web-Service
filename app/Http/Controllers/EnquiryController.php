@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Services\AdminNotificationService;
-use App\Services\CentralSyncService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +16,7 @@ class EnquiryController extends Controller
         return view('enquiry', compact('services', 'selectedService'));
     }
 
-    public function store(Request $request, CentralSyncService $centralSync)
+    public function store(Request $request)
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
@@ -36,19 +35,6 @@ class EnquiryController extends Controller
             'status' => 'new',
             'created_at' => now(),
             'updated_at' => now(),
-        ]);
-
-        $centralSync->enquiry([
-            'business_code' => config('services.mci_central.business_code'),
-            'source_reference_id' => 'web-enquiry-'.$enquiryId,
-            'source_site' => config('app.url', 'https://web.mciedu.com'),
-            'name' => $data['name'],
-            'phone' => $data['phone'],
-            'email' => $data['email'] ?? null,
-            'subject' => 'C-Net Web Services Enquiry',
-            'message' => $data['message'] ?: 'Service enquiry for '.$data['service'],
-            'category' => 'general',
-            'course_service' => $data['service'],
         ]);
 
         AdminNotificationService::sendEnquiry($data);
