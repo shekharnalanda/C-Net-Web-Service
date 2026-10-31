@@ -21,12 +21,20 @@ class EnquiryController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'phone' => ['required', 'string', 'max:20'],
-            'email' => ['nullable', 'email', 'max:150'],
+            'email' => ['required', 'email, 'max:150'],
             'service' => ['required', 'string', 'max:100'],
             'message' => ['nullable', 'string', 'max:2000'],
         ]);
 
-        $enquiryId = DB::table('enquiries')->insertGetId([
+        
+        $verified = $request->session()->get('enquiry_email_verified');
+        $email = strtolower(trim((string) ($data['email'] ?? '')));
+        if (!$verified || !hash_equals((string) ($verified['email'] ?? ''), $email) || now()->timestamp > (int) ($verified['expires_at'] ?? 0)) {
+            return back()->withInput()->withErrors(['email' => 'पहले इस email पर भेजा गया OTP verify करें।']);
+        }
+        $request->session()->forget('enquiry_email_verified');
+
+$enquiryId = DB::table('enquiries')->insertGetId([
             'name' => $data['name'],
             'phone' => $data['phone'],
             'email' => $data['email'] ?? null,
