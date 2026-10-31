@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Services\AdminNotificationService;
-use App\Services\CentralSyncService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class EnquiryController extends Controller
 {
@@ -17,17 +18,25 @@ class EnquiryController extends Controller
         return view('enquiry', compact('services', 'selectedService'));
     }
 
-    public function store(Request $request, CentralSyncService $centralSync)
+    public function store(Request $request)
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'phone' => ['required', 'string', 'max:20'],
-            'email' => ['nullable', 'email', 'max:150'],
+            'email' => ['required', 'email', 'max:150'],
             'service' => ['required', 'string', 'max:100'],
             'message' => ['nullable', 'string', 'max:2000'],
         ]);
 
-        $enquiryId = DB::table('enquiries')->insertGetId([
+        
+        $verified = $request->session()->get('enquiry_email_verified');
+        $email = strtolower(trim((string) ($data['email'] ?? '')));
+        if (!$verified || !hash_equals((string) ($verified['email'] ?? ''), $email) || now()->timestamp > (int) ($verified['expires_at'] ?? 0)) {
+            return back()->withInput()->withErrors(['email' => 'पहले इस email पर भेजा गया OTP verify करें।']);
+        }
+        $request->session()->forget('enquiry_email_verified');
+
+$enquiryId = DB::table('enquiries')->insertGetId([
             'name' => $data['name'],
             'phone' => $data['phone'],
             'email' => $data['email'] ?? null,
@@ -38,20 +47,15 @@ class EnquiryController extends Controller
             'updated_at' => now(),
         ]);
 
-        $centralSync->enquiry([
-            'business_code' => config('services.mci_central.business_code'),
-            'source_reference_id' => 'web-enquiry-'.$enquiryId,
-            'source_site' => config('app.url', 'https://web.mciedu.com'),
-            'name' => $data['name'],
-            'phone' => $data['phone'],
-            'email' => $data['email'] ?? null,
-            'subject' => 'C-Net Web Services Enquiry',
-            'message' => $data['message'] ?: 'Service enquiry for '.$data['service'],
-            'category' => 'general',
-            'course_service' => $data['service'],
-        ]);
-
         AdminNotificationService::sendEnquiry($data);
+
+        try {
+            Mail::raw('Thank you for contacting C-Net Web Services. We have received your enquiry and our team will get back to you soon.', function ($mail) use ($data) {
+                $mail->to($data['email'])->subject('C-Net Web Services - Enquiry Received');
+            });
+        } catch (\Throwable $exception) {
+            Log::warning('Enquiry confirmation email failed', ['error' => $exception->getMessage()]);
+        }
 
         return back()->with('success', 'Thank you! Your enquiry has been submitted successfully.');
     }
