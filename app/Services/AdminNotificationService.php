@@ -71,7 +71,7 @@ class AdminNotificationService
     {
         try {
             Mail::raw($message, function ($mail) use ($subject): void {
-                $mail->to(config('cnet.admin_notification_email'))
+                $mail->to(config('enquiry.recipient'))
                     ->subject($subject);
             });
         } catch (Throwable $exception) {
